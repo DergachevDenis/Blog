@@ -1,0 +1,23 @@
+package com.dergachev.blog.dto;
+
+
+import lombok.Data;
+
+import javax.validation.constraints.*;
+
+@Data
+public class RegistrationRequest {
+    @NotEmpty(message = "Email cannot be empty")
+    @Email(message = "Please enter a valid email")
+    private String email;
+
+    @NotBlank(message = "Password cannot be empty")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}", message = "Password must contain 6 characters using numbers, symbols, Latin alphabet, lowercase and uppercase characters")
+    private String password;
+
+    @NotBlank(message = "FirstName cannot be empty")
+    private String first_name;
+
+    @NotBlank(message = "LastName cannot be empty")
+    private String last_name;
+}
