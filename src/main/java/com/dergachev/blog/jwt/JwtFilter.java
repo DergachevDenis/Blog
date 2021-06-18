@@ -21,7 +21,7 @@ import static org.springframework.util.StringUtils.hasText;
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER = "Bearer_";
+    public static final String BEARER = "Bearer ";
 
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService customUserDetailsService;

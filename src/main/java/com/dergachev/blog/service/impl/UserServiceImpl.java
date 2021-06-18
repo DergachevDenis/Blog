@@ -11,6 +11,7 @@ import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.repository.UserRepository;
 import com.dergachev.blog.repository.RoleEntityRepository;
+import com.dergachev.blog.service.MailSenderService;
 import com.dergachev.blog.service.UserService;
 import com.mysql.cj.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,16 +34,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, String> template;
-    private final MailSenderImpl mailSenderImpl;
+    private final MailSenderService mailSenderService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> template, MailSenderImpl mailSenderImpl, JwtProvider jwtProvider) {
+    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> template, MailSenderService mailSenderService, JwtProvider jwtProvider) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.template = template;
-        this.mailSenderImpl = mailSenderImpl;
+        this.mailSenderService = mailSenderService;
         this.jwtProvider = jwtProvider;
     }
 
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
         String activationCode = createHashCode(user.getEmail());
 
         if (!StringUtils.isNullOrEmpty(user.getEmail())) {
-            mailSenderImpl.sendActivationCode(user, activationCode);
+            mailSenderService.sendActivationCode(user, activationCode);
         }
     }
 
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
             throw new UserException(String.format("User with email: %s not found", request.getEmail()));
         }
         String code = createHashCode(email);
-        mailSenderImpl.sendForgotPasswordEmail(user, code);
+        mailSenderService.sendForgotPasswordEmail(user, code);
     }
 
     public void resetPassword(ResetPasswordRequest request) throws UserException {

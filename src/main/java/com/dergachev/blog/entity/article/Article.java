@@ -1,10 +1,12 @@
 package com.dergachev.blog.entity.article;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -30,10 +32,12 @@ public class Article {
     @Column(name = "author_id", nullable = false)
     private Integer author_id;
 
-    @Column(name = "created_at", nullable = false)
-    private Date created_at;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate created_at;
 
     @Column(name = "update_at", nullable = false)
-    private Date update_at;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate update_at;
 
 }
