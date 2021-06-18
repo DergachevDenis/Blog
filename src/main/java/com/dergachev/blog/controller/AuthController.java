@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +32,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -43,7 +42,7 @@ public class AuthController {
         try {
             userService.register(registrationRequest);
         } catch (UserException userException) {
-            response.put("error", userException);
+            response.put("error", userException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (Exception exception) {
             log.error("IN registerUser - {}", exception.getMessage());
@@ -55,8 +54,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Map<String, Object>> authResponse(@Valid @RequestBody AuthRequest request, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> authResponse(@Valid @RequestBody AuthRequest request, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -76,8 +75,8 @@ public class AuthController {
     }
 
     @GetMapping("/auth/confirm/{code}")
-    public ResponseEntity<Map<String, Object>> activate(@PathVariable String code) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> activate(@PathVariable String code) {
+        Map<String, String> response = new HashMap<>();
 
         try {
             userService.activateUser(code);
@@ -93,8 +92,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/forgot_password")
-    public ResponseEntity<Map<String, Object>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -114,8 +113,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/reset")
-    public ResponseEntity<Map<String, Object>> resetPassword(@Valid @RequestBody ResetPasswordRequest request, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -134,7 +133,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private boolean getMapResponseError(BindingResult bindingResult, Map<String, Object> response) {
+    private boolean getMapResponseError(BindingResult bindingResult, Map<String, String> response) {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {

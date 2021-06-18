@@ -12,7 +12,7 @@ public class RegistrationRequest {
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}", message = "Password must contain 6 characters using numbers, symbols, Latin alphabet, lowercase and uppercase characters")
+    @Pattern(regexp = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$)", message = "Password must contain 6 characters using numbers, Latin alphabet, lowercase and uppercase characters")
     private String password;
 
     @NotBlank(message = "FirstName cannot be empty")
