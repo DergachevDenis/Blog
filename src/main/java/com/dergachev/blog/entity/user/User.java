@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "author_table")
+@Table(name = "user_table")
 @Data
 @ToString(of = {"email", "first_name", "last_name", "created_at"})
 @EqualsAndHashCode(of = {"id", "email"})
