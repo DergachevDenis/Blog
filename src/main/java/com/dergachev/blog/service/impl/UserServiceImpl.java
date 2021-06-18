@@ -37,7 +37,8 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> template, MailSenderImpl mailSenderImpl, JwtProvider jwtProvider) {
+    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           RedisTemplate<String, String> template, MailSenderImpl mailSenderImpl, JwtProvider jwtProvider) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
