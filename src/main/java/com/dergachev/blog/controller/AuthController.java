@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +42,12 @@ public class AuthController {
         try {
             userService.register(registrationRequest);
         } catch (UserException userException) {
+            log.error("IN registerUser - {}", userException.getMessage());
             response.put("error", userException);
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (Exception exception) {
             log.error("IN registerUser - {}", exception.getMessage());
+            response.put("error", exception.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -55,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Map<String, Object>> authResponse(@Valid @RequestBody AuthRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> authUser(@Valid @RequestBody AuthRequest request, BindingResult bindingResult) {
         Map<String, Object> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -65,10 +66,12 @@ public class AuthController {
         try {
             response.put("Token:", userService.auth(request));
         } catch (UserException userException) {
+            log.error("IN authUser - {}", userException.getMessage());
             response.put("error", userException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception exception) {
-            log.error("IN authResponse - {}", exception.getMessage());
+            log.error("IN authUser - {}", exception.getMessage());
+            response.put("error", exception.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -82,11 +85,13 @@ public class AuthController {
         try {
             userService.activateUser(code);
         } catch (UserException userException) {
+            log.error("IN activate - {}", userException.getMessage());
             response.put("error", userException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception exception) {
             log.error("IN activate - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("error", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -103,11 +108,13 @@ public class AuthController {
         try {
             userService.forgotPasswordEmail(forgotPasswordRequest);
         } catch (UserException userException) {
+            log.error("IN activate - {}", userException.getMessage());
             response.put("error", userException.getMessage());
             return new ResponseEntity(response, HttpStatus.NOT_FOUND);
         } catch (Exception exception) {
             log.error("IN forgotPassword - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("error", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -124,11 +131,13 @@ public class AuthController {
         try {
             userService.resetPassword(request);
         } catch (UserException userException) {
+            log.error("IN resetPassword - {}", userException.getMessage());
             response.put("error", userException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception exception) {
             log.error("IN resetPassword - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("error", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
