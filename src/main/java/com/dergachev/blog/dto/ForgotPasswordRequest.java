@@ -7,7 +7,7 @@ import lombok.Value;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Value
+@Data
 public class ForgotPasswordRequest {
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Please enter a valid email")

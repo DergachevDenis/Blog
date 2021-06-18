@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @PropertySource("classpath:blog.properties")
 public class MailSenderImpl implements MailSenderService {
-    private final static String ACTIVATION_MESSAGE = "Hello %s! Welcome to site. Please, visit next link to confirm email: http://localhost:8075/activate/%s";
+    private final static String ACTIVATION_MESSAGE = "Hello %s! Welcome to site. Please, visit next link to confirm email: http://localhost:8075/auth/confirm/%s";
     private final static String SUBJECT_ACTIVATION = "Activation code";
     private final static String FORGOT_PASSWORD_MESSAGE = "Hello %s! Your password reset code: %s";
     private final static String SUBJECT_FORGOT_PASSWORD = "Forgot Password";

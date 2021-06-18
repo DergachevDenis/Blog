@@ -6,7 +6,7 @@ import lombok.Value;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-@Value
+@Data
 public class AuthRequest {
     @NotEmpty(message = "Email cannot be empty")
     private String email;

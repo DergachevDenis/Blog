@@ -1,11 +1,12 @@
 package com.dergachev.blog.dto;
 
+import lombok.Data;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Value
+@Data
 public class ResetPasswordRequest {
     @NotBlank(message = "Code cannot be empty")
     private String code;
