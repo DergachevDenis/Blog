@@ -27,7 +27,7 @@ import static org.springframework.util.StringUtils.hasText;
 @Slf4j
 @RestController
 @RequestMapping("articles")
-public class ArticlesController {
+public class ArticleController {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
@@ -99,7 +99,7 @@ public class ArticlesController {
 
 
         List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort);
-        if (articles == null) {
+        if (articles == null || articles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(articles, HttpStatus.OK);

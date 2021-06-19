@@ -18,8 +18,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "text", nullable = false)
-    private String text;
+    @Column(name = "message", nullable = false)
+    private String message;
 
 
     @Column(name = "articleId", nullable = false)
@@ -29,6 +29,6 @@ public class Comment {
     private Integer userId;
 
     @Column(name = "createdAt", nullable = false, updatable = false)
-    private LocalDate createdAt;
+    private String createdAt;
 
 }

@@ -32,11 +32,9 @@ public class Article {
     private Integer authorId;
 
     @Column(name = "createdAt", nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String createdAt;
 
     @Column(name = "updateAt", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String updateAt;
 
 }
