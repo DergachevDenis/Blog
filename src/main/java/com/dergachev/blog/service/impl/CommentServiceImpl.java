@@ -2,6 +2,7 @@ package com.dergachev.blog.service.impl;
 
 import com.dergachev.blog.dto.CommentRequest;
 import com.dergachev.blog.entity.comment.Comment;
+import com.dergachev.blog.exception.CommentException;
 import com.dergachev.blog.repository.CommentRepository;
 import com.dergachev.blog.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +45,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getComment(Integer articleId, Integer commentId) {
-        return null;
+    public Comment getComment(Integer commentId) {
+        return commentRepository.findById(commentId).orElseThrow(()->new CommentException(String.format("Comment with id %s not found", commentId)));
     }
 
     @Override
-    public void deleteArticle(Integer id_article, Integer commentId) {
+    public void deleteComment(Integer id_article, Integer commentId) {
 
     }
 }

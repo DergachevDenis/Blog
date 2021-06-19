@@ -25,7 +25,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @RestController
-@RequestMapping("articles/{articleID}/comments")
+@RequestMapping("articles/{articleId}/comments")
 public class CommentController {
 
     public static final String AUTHORIZATION = "Authorization";
@@ -61,8 +61,8 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getComments(@PathVariable Integer articleID,
                                                      @RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
-                                                     @RequestParam (name = "author", required = false) Integer authorId,
-                                                     @RequestParam (name = "sort", required = false, defaultValue = "message" ) String sort) {
+                                                     @RequestParam(name = "author", required = false) Integer authorId,
+                                                     @RequestParam(name = "sort", required = false, defaultValue = "message") String sort) {
 
 
         List<Comment> comments = commentService.getComments(articleID, skip, limit, authorId, sort);
@@ -71,6 +71,12 @@ public class CommentController {
         }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<Comment> getComment(@PathVariable Integer commentId) {
+        return new ResponseEntity<>(commentService.getComment(commentId), HttpStatus.OK);
+    }
+
 
     private boolean getMapResponseError(BindingResult bindingResult, Map<String, String> response) {
         if (bindingResult.hasErrors()) {
