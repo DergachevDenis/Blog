@@ -1,9 +1,9 @@
 package com.dergachev.blog.controller;
 
-import com.dergachev.blog.dto.ArticleRequest;
 import com.dergachev.blog.dto.CommentRequest;
-import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.entity.comment.Comment;
+import com.dergachev.blog.exception.ArticleException;
+import com.dergachev.blog.exception.CommentException;
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.service.impl.CommentServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +31,14 @@ public class CommentController {
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
 
-    @Autowired
-    CommentServiceImpl commentService;
+    private final CommentServiceImpl commentService;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    JwtProvider jwtProvider;
+    public CommentController(CommentServiceImpl commentService, JwtProvider jwtProvider) {
+        this.commentService = commentService;
+        this.jwtProvider = jwtProvider;
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> addComment(HttpServletRequest httpServletRequest, @Valid @RequestBody CommentRequest request, BindingResult bindingResult, @PathVariable Integer articleID) {
@@ -74,9 +77,34 @@ public class CommentController {
 
     @GetMapping("/{commentId}")
     public ResponseEntity<Comment> getComment(@PathVariable Integer commentId) {
-        return new ResponseEntity<>(commentService.getComment(commentId), HttpStatus.OK);
+       try {
+           Comment comment = commentService.getComment(commentId);
+           return new ResponseEntity<>(comment, HttpStatus.OK);
+       }
+        catch (CommentException commentException){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Map<String, String>> deleteComment(HttpServletRequest httpServletRequest, @PathVariable Integer articleId, @PathVariable Integer commentId) {
+        Map<String, String> response = new HashMap<>();
+
+        String email_user = getEmailFromRequest(httpServletRequest);
+
+        try {
+            commentService.deleteComment(articleId, commentId, email_user);
+            response.put("message", "Comment deleted");
+            return new ResponseEntity(response, HttpStatus.OK);
+        } catch (ArticleException articleException) {
+            response.put("error", articleException.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (DataAccessException exception) {
+            log.error("IN deleteComment - {}", exception.getMessage());
+            response.put("error", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private boolean getMapResponseError(BindingResult bindingResult, Map<String, String> response) {
         if (bindingResult.hasErrors()) {

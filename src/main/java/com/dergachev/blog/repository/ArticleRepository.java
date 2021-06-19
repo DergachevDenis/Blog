@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
-
-    //Optional<Article> findById(Integer id)findByFirstNameStartsWith;
-
     List<Article> findByTitleAndAuthorId(String title, int author_id, Pageable page);
     List<Article> findAllByTitle(String title, Pageable page);
     List<Article> findAllByAuthorId(int author_id, Pageable page);

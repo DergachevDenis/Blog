@@ -21,7 +21,6 @@ public class Comment {
     @Column(name = "message", nullable = false)
     private String message;
 
-
     @Column(name = "articleId", nullable = false)
     private Integer articleId;
 

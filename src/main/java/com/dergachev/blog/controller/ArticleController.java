@@ -109,7 +109,7 @@ public class ArticleController {
     public ResponseEntity<List<Article>> getMyArticles(HttpServletRequest httpServletRequest) {
         String email_user = getEmailFromRequest(httpServletRequest);
         List<Article> articles = articleService.getMyArticles(email_user);
-        if (articles == null) {
+        if (articles == null || articles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(articles, HttpStatus.OK);
@@ -129,7 +129,7 @@ public class ArticleController {
             response.put("error", articleException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (DataAccessException exception) {
-            log.error("IN editArticle - {}", exception.getMessage());
+            log.error("IN deleteArticle - {}", exception.getMessage());
             response.put("error", exception.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
