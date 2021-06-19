@@ -11,6 +11,8 @@ import com.dergachev.blog.service.ArticleService;
 import com.dergachev.blog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -62,16 +64,26 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getPublicArticles() {
-        // List<Article> articles = articleRepository.findByTitle(post_title, PageRequest.of(skip, skip + limit, Sort.by(post_title)));
-        List<Article> articles = articleRepository.findAllByStatus(ArticleStatus.PUBLIC);
-        return articles;
+        return articleRepository.findAllByStatus(ArticleStatus.PUBLIC);
+    }
+
+    @Override
+    public List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort) {
+        if (title == null && authorId == null) {
+            return articleRepository.findAll(PageRequest.of(skip, skip + limit, Sort.by(sort))).getContent();
+        } else if (title == null) {
+            return articleRepository.findAllByAuthorId(authorId, PageRequest.of(skip, skip + limit, Sort.by(sort)));
+        } else if (authorId == null) {
+            return articleRepository.findAllByTitle(title, PageRequest.of(skip, skip + limit, Sort.by(sort)));
+        } else {
+            return articleRepository.findByTitleAndAuthorId(title, authorId, PageRequest.of(skip, skip + limit, Sort.by(sort)));
+        }
     }
 
     @Override
     public List<Article> getMyArticles(String email_user) {
         Integer author_id = userRepository.findByEmail(email_user).getId();
-        List<Article> articles = articleRepository.findAllByAuthorId(author_id);
-        return articles;
+        return articleRepository.findAllByAuthorId(author_id);
     }
 
     @Override

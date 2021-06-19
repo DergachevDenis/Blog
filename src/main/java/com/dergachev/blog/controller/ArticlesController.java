@@ -39,7 +39,7 @@ public class ArticlesController {
     JwtProvider jwtProvider;
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest  httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -59,7 +59,7 @@ public class ArticlesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest  httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -81,38 +81,49 @@ public class ArticlesController {
         }
     }
 
+/*    @GetMapping
+    public ResponseEntity<List<Article>> getPublicArticles() {
+        List<Article> articles = articleService.getPublicArticles();
+        if (articles == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }*/
+
     @GetMapping
-    public ResponseEntity<List<Article>> getPublicArticle(/*@RequestParam Integer skip,
-                                                          @RequestParam Integer limit,
-                                                          @RequestParam String post_title,
-                                                          @RequestParam Integer author,
-                                                          @RequestParam String sort*/) {
-           List<Article> articles = articleService.getPublicArticles();
-           if (articles == null) {
-               return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-           }
-           return new ResponseEntity<>(articles, HttpStatus.OK);
+    public ResponseEntity<List<Article>> getArticles(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
+                                                     @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
+                                                     @RequestParam(name = "q", required = false) String post_title,
+                                                     @RequestParam (name = "author", required = false) Integer authorId,
+                                                     @RequestParam (name = "sort", required = false, defaultValue = "title" ) String sort) {
+
+
+        List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort);
+        if (articles == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Article>> getMyArticle(HttpServletRequest  httpServletRequest){
+    public ResponseEntity<List<Article>> getMyArticles(HttpServletRequest httpServletRequest) {
         String email_user = getEmailFromRequest(httpServletRequest);
         List<Article> articles = articleService.getMyArticles(email_user);
-        if(articles == null){
+        if (articles == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteArticle(HttpServletRequest httpServletRequest, @PathVariable Integer id){
+    public ResponseEntity<Map<String, String>> deleteArticle(HttpServletRequest httpServletRequest, @PathVariable Integer id) {
         Map<String, String> response = new HashMap<>();
 
         String email_user = getEmailFromRequest(httpServletRequest);
 
         try {
-            articleService.deleteArticle(id,email_user);
-            response.put("message","Article deleted");
+            articleService.deleteArticle(id, email_user);
+            response.put("message", "Article deleted");
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (ArticleException articleException) {
             response.put("error", articleException.getMessage());
@@ -122,9 +133,6 @@ public class ArticlesController {
             response.put("error", exception.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
     }
 
     private boolean getMapResponseError(BindingResult bindingResult, Map<String, String> response) {
