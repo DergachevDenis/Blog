@@ -39,14 +39,14 @@ public class ArticlesController {
     JwtProvider jwtProvider;
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> addArticle(ServletRequest servletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest  httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        String email_user = getEmailFromRequest((HttpServletRequest) servletRequest);
+        String email_user = getEmailFromRequest(httpServletRequest);
         try {
             articleService.addArticle(request, email_user);
             response.put("Message", String.format("Article with name %s created!", request.getTitle()));
@@ -59,14 +59,14 @@ public class ArticlesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> editArticle(ServletRequest servletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest  httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
+        Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        String email_user = getEmailFromRequest((HttpServletRequest) servletRequest);
+        String email_user = getEmailFromRequest(httpServletRequest);
         try {
             articleService.editArticle(request, id, email_user);
             response.put("Message", String.format("Article with name %s update!", request.getTitle()));
@@ -104,7 +104,30 @@ public class ArticlesController {
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    private boolean getMapResponseError(BindingResult bindingResult, Map<String, Object> response) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> deleteArticle(HttpServletRequest httpServletRequest, @PathVariable Integer id){
+        Map<String, String> response = new HashMap<>();
+
+        String email_user = getEmailFromRequest(httpServletRequest);
+
+        try {
+            articleService.deleteArticle(id,email_user);
+            response.put("message","Article deleted");
+            return new ResponseEntity(response, HttpStatus.OK);
+        } catch (ArticleException articleException) {
+            response.put("error", articleException.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (DataAccessException exception) {
+            log.error("IN editArticle - {}", exception.getMessage());
+            response.put("error", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+
+    }
+
+    private boolean getMapResponseError(BindingResult bindingResult, Map<String, String> response) {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {

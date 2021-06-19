@@ -10,6 +10,6 @@ public interface ArticleService {
     void addArticle(ArticleRequest request, String email);
     List<Article> getPublicArticles();
     List<Article> getMyArticles(String email);
-    void deleteArticle(ArticleRequest request, String email);
+    void deleteArticle(Integer id_article, String email);
 
 }

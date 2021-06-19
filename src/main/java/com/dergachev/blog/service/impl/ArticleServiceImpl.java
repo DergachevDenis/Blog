@@ -62,20 +62,26 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getPublicArticles() {
-       // List<Article> articles = articleRepository.findByTitle(post_title, PageRequest.of(skip, skip + limit, Sort.by(post_title)));
+        // List<Article> articles = articleRepository.findByTitle(post_title, PageRequest.of(skip, skip + limit, Sort.by(post_title)));
         List<Article> articles = articleRepository.findAllByStatus(ArticleStatus.PUBLIC);
         return articles;
     }
 
     @Override
     public List<Article> getMyArticles(String email_user) {
-       Integer author_id = userRepository.findByEmail(email_user).getId();
+        Integer author_id = userRepository.findByEmail(email_user).getId();
         List<Article> articles = articleRepository.findAllByAuthorId(author_id);
         return articles;
     }
 
     @Override
-    public void deleteArticle(ArticleRequest request, String email) {
+    public void deleteArticle(Integer id_article, String email_user) {
+        Article article = articleRepository.findById(id_article).orElseThrow(() -> new ArticleException(String.format("Article with id: %s not found", id_article)));
 
+        if (!article.getAuthorId().equals(userRepository.findByEmail(email_user).getId())) {
+            log.error("IN editArticle - Only the creator of the post can edit the article");
+            throw new ArticleException("Only the creator of the post can edit the article");
+        }
+        articleRepository.deleteById(id_article);
     }
 }
