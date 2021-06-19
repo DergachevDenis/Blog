@@ -1,18 +1,16 @@
 package com.dergachev.blog.controller;
 
 import com.dergachev.blog.dto.ArticleRequest;
-import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.service.impl.ArticleServiceImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
+
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.util.StringUtils.hasText;
-
+@Slf4j
 @RestController
 @RequestMapping("articles")
 public class ArticlesController {
@@ -41,12 +39,13 @@ public class ArticlesController {
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-
         String email = getEmailFromRequest((HttpServletRequest) servletRequest);
         articleService.addArticle(request, email);
         response.put("Email", email);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+
 
     private boolean getMapResponseError(BindingResult bindingResult, Map<String, Object> response) {
         if (bindingResult.hasErrors()) {
