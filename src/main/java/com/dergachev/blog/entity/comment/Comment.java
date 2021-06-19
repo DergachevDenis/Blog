@@ -10,10 +10,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "commnet_table")
+@Table(name = "comment_table")
 @Data
 @EqualsAndHashCode(of = {"id"})
-@ToString(of = {"text", "created_at"})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +22,13 @@ public class Comment {
     private String text;
 
 
-    @Column(name = "article", nullable = false)
-    private Integer article_id;
+    @Column(name = "articleId", nullable = false)
+    private Integer articleId;
 
-    @Column(name = "user_id", nullable = false, updatable = false)
-    private Integer user_id;
+    @Column(name = "userId", nullable = false, updatable = false)
+    private Integer userId;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate created_at;
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private LocalDate createdAt;
 
 }

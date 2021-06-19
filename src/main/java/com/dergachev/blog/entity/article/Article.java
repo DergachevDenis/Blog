@@ -12,7 +12,6 @@ import java.util.Date;
 @Entity
 @Table(name = "article_table")
 @Data
-@ToString(of = {"title", "text", "created_at", "update_at"})
 @EqualsAndHashCode(of = {"id"})
 public class Article {
     @Id
@@ -29,15 +28,15 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private ArticleStatus status;
 
-    @Column(name = "author_id", nullable = false)
-    private Integer author_id;
+    @Column(name = "authorId", nullable = false)
+    private Integer authorId;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "createdAt", nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate created_at;
+    private String createdAt;
 
-    @Column(name = "update_at", nullable = false)
+    @Column(name = "updateAt", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate update_at;
+    private String updateAt;
 
 }

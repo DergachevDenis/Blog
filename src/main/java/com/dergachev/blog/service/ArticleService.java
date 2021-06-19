@@ -11,4 +11,5 @@ public interface ArticleService {
     List<Article> getPublicArticles();
     List<Article> getMyArticles(String email);
     void deleteArticle(ArticleRequest request, String email);
+
 }

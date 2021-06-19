@@ -1,6 +1,7 @@
 package com.dergachev.blog.controller;
 
 import com.dergachev.blog.dto.ArticleRequest;
+import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.exception.ArticleException;
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.service.impl.ArticleServiceImpl;
@@ -51,6 +52,7 @@ public class ArticlesController {
             response.put("Message", String.format("Article with name %s created!", request.getTitle()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (DataAccessException exception) {
+            log.error("IN addArticle - {}", exception.getMessage());
             response.put("error", exception.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -73,9 +75,33 @@ public class ArticlesController {
             response.put("error", articleException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (DataAccessException exception) {
+            log.error("IN editArticle - {}", exception.getMessage());
             response.put("error", exception.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Article>> getPublicArticle(/*@RequestParam Integer skip,
+                                                          @RequestParam Integer limit,
+                                                          @RequestParam String post_title,
+                                                          @RequestParam Integer author,
+                                                          @RequestParam String sort*/) {
+           List<Article> articles = articleService.getPublicArticles();
+           if (articles == null) {
+               return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+           }
+           return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<Article>> getMyArticle(HttpServletRequest  httpServletRequest){
+        String email_user = getEmailFromRequest(httpServletRequest);
+        List<Article> articles = articleService.getMyArticles(email_user);
+        if(articles == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     private boolean getMapResponseError(BindingResult bindingResult, Map<String, Object> response) {

@@ -2,9 +2,8 @@ package com.dergachev.blog.entity.user;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,18 +11,17 @@ import java.util.Date;
 @Entity
 @Table(name = "user_table")
 @Data
-@ToString(of = {"email", "first_name", "last_name", "created_at"})
 @EqualsAndHashCode(of = {"id", "email"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name", nullable = false)
-    private String first_name;
+    @Column(name = "firstName", nullable = false)
+    private String firstName;
 
-    @Column(name = "last_name", nullable = false)
-    private String last_name;
+    @Column(name = "lastName", nullable = false)
+    private String lastName;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -37,9 +35,9 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "created", nullable = false, updatable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "role_table")
+    @JoinColumn(name = "roleTable")
     private RoleEntity roleEntity;
 }
