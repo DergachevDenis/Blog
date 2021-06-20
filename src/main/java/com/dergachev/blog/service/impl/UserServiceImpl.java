@@ -47,7 +47,6 @@ public class UserServiceImpl implements UserService {
         this.jwtProvider = jwtProvider;
     }
 
-    // @Transactional(rollbackFor = {MailException.class})
     public void register(RegistrationRequest registrationRequest) throws UserException, MailException {
         User user = findByEmail(registrationRequest.getEmail());
         if (user != null) {
