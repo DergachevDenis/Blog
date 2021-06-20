@@ -85,42 +85,22 @@ public class ArticleController {
         }
     }
 
-/*    @GetMapping
-    public ResponseEntity<List<Article>> getPublicArticles() {
-        List<Article> articles = articleService.getPublicArticles();
-        if (articles == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(articles, HttpStatus.OK);
-    }*/
-
     @GetMapping
     public ResponseEntity<List<Article>> getArticles(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
                                                      @RequestParam(name = "q", required = false) String post_title,
                                                      @RequestParam(name = "author", required = false) Integer authorId,
-                                                     @RequestParam(name = "sort", required = false, defaultValue = "title") String sort) {
+                                                     @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+                                                     @RequestParam(name = "order", required = false, defaultValue = "ASC") String order) {
 
-
-        List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort);
-        if (articles == null || articles.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort, order);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<Page<Article>> getArticlesFilter(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
-                                                           @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
-                                                           @RequestParam(name = "q", required = false) String post_title,
-                                                           @RequestParam(name = "author", required = false) Integer authorId,
-                                                           @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
-                                                           @RequestParam(name = "order", required = false) String order,
-                                                           @RequestParam(name = "tags", required = false) List<String> tags) {
-       Page <Article> articles = articleService.getArticlesFilter(skip, limit, post_title, authorId, sort, order,tags);
-        if (articles == null || articles.isEmpty()) {
-            return new ResponseEntity<>(articles, HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/tags")
+    public ResponseEntity<List<Article>> getArticlesTags(@RequestParam(name = "tags", required = false) List<String> tags) {
+
+        List<Article> articles = articleService.getArticlesTags(tags);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 

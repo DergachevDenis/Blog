@@ -67,23 +67,19 @@ public class CommentController {
                                                      @RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
                                                      @RequestParam(name = "author", required = false) Integer authorId,
-                                                     @RequestParam(name = "sort", required = false, defaultValue = "message") String sort) {
+                                                     @RequestParam(name = "sort", required = false, defaultValue = "message") String sort,
+                                                     @RequestParam(name = "order", required = false, defaultValue = "ASC") String order) {
 
-
-        List<Comment> comments = commentService.getComments(articleId, skip, limit, authorId, sort);
-        if (comments == null || comments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        List<Comment> comments = commentService.getComments(articleId, skip, limit, authorId, sort, order);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @GetMapping("/{commentId}")
     public ResponseEntity<Comment> getComment(@PathVariable Integer commentId) {
-       try {
-           Comment comment = commentService.getComment(commentId);
-           return new ResponseEntity<>(comment, HttpStatus.OK);
-       }
-        catch (CommentException commentException){
+        try {
+            Comment comment = commentService.getComment(commentId);
+            return new ResponseEntity<>(comment, HttpStatus.OK);
+        } catch (CommentException commentException) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

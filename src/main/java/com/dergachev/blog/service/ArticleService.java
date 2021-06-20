@@ -11,12 +11,11 @@ public interface ArticleService {
 
     void addArticle(ArticleRequest request, String email);
 
-    List<Article> getPublicArticles();
-
-    List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort);
+    List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort, String order);
 
     List<Article> getMyArticles(String email);
 
     void deleteArticle(Integer id_article, String email);
 
+    List<Article> getArticlesTags(List<String> tags);
 }
