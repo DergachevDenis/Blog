@@ -1,19 +1,23 @@
 package com.dergachev.blog.entity.article;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.dergachev.blog.entity.comment.Comment;
+import com.dergachev.blog.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "article_table")
 @Data
-@ToString(of = {"title", "text", "created_at", "update_at"})
 @EqualsAndHashCode(of = {"id"})
+@ToString(exclude = {"comments", "tags"})
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,15 +33,35 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private ArticleStatus status;
 
-    @Column(name = "author_id", nullable = false)
-    private Integer author_id;
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private String createdAt;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate created_at;
+    @Column(name = "updateAt", nullable = false)
+    private String updateAt;
 
-    @Column(name = "update_at", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate update_at;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "article_tag",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getArticles().add(this);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getArticles().remove(this);
+    }
 }

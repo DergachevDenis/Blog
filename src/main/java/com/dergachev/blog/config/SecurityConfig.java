@@ -1,6 +1,5 @@
 package com.dergachev.blog.config;
 
-import com.dergachev.blog.jwt.CustomUserDetailsService;
 import com.dergachev.blog.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register", "/auth/*","/auth", "/activate/*", "/auth/confirm/*").permitAll()
+                .antMatchers("/register", "/auth/*","/auth", "/activate/*", "/auth/confirm/*", "/exception").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -47,7 +47,6 @@ public class UserServiceImpl implements UserService {
         this.jwtProvider = jwtProvider;
     }
 
-    // @Transactional(rollbackFor = {MailException.class})
     public void register(RegistrationRequest registrationRequest) throws UserException, MailException {
         User user = findByEmail(registrationRequest.getEmail());
         if (user != null) {
@@ -126,7 +125,7 @@ public class UserServiceImpl implements UserService {
         String code = request.getCode();
         String email = template.opsForValue().get(code);
         if (email == null) {
-            log.warn("IN resetPassword - Reset code expired or not found");
+            log.error("IN resetPassword - Reset code expired or not found");
             throw new UserException("Reset code expired");
         }
         User user = userRepository.findByEmail(email);
@@ -137,8 +136,8 @@ public class UserServiceImpl implements UserService {
     private void createUser(RegistrationRequest registrationRequest, User user) {
         user.setEmail(registrationRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        user.setFirst_name(registrationRequest.getFirst_name());
-        user.setLast_name(registrationRequest.getLast_name());
+        user.setFirstName(registrationRequest.getFirst_name());
+        user.setLastName(registrationRequest.getLast_name());
         user.setStatus(UserStatus.NOT_ACTIVE);
 
         RoleEntity authorRole = roleRepository.findByName("ROLE_USER");

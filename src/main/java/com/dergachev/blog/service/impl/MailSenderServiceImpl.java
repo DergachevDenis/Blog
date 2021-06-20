@@ -30,13 +30,13 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void sendActivationCode(User user, String activationCode) {
-        String message = String.format(ACTIVATION_MESSAGE, user.getFirst_name(), activationCode);
+        String message = String.format(ACTIVATION_MESSAGE, user.getFirstName(), activationCode);
         send(user.getEmail(), SUBJECT_ACTIVATION, message);
     }
 
     @Override
     public void sendForgotPasswordEmail(User user, String code) {
-        String message = String.format(FORGOT_PASSWORD_MESSAGE, user.getFirst_name(), code);
+        String message = String.format(FORGOT_PASSWORD_MESSAGE, user.getFirstName(), code);
         send(user.getEmail(), SUBJECT_FORGOT_PASSWORD, message);
     }
 

@@ -6,9 +6,17 @@ import com.dergachev.blog.entity.article.Article;
 import java.util.List;
 
 public interface ArticleService {
-    void editArticle(ArticleRequest request, String email);
+
+    void editArticle(ArticleRequest request, Integer id_article, String email);
+
     void addArticle(ArticleRequest request, String email);
+
     List<Article> getPublicArticles();
+
+    List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort);
+
     List<Article> getMyArticles(String email);
-    void deleteArticle(ArticleRequest request, String email);
+
+    void deleteArticle(Integer id_article, String email);
+
 }
