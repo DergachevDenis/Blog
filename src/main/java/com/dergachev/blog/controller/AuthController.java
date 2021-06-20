@@ -14,12 +14,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Transactional
 @RestController
 @Slf4j
 public class AuthController {
@@ -45,8 +46,9 @@ public class AuthController {
             response.put("error", userException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (Exception exception) {
+            response.put("error", exception.getMessage());
             log.error("IN registerUser - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         response.put("message", String.format("The user has been created. Follow the link that we sent to %s to activate your account", registrationRequest.getEmail()));

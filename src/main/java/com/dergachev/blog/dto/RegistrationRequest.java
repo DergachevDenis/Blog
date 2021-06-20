@@ -1,6 +1,5 @@
 package com.dergachev.blog.dto;
 
-
 import lombok.Data;
 
 import javax.validation.constraints.*;

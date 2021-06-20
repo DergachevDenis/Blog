@@ -1,7 +1,9 @@
 package com.dergachev.blog.service.impl;
 
 import com.dergachev.blog.dto.CommentRequest;
+import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.entity.comment.Comment;
+import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.exception.ArticleException;
 import com.dergachev.blog.exception.CommentException;
 import com.dergachev.blog.repository.ArticleRepository;
@@ -34,10 +36,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void addComment(CommentRequest request, Integer articleId, String email) {
+        Article article = articleRepository.findById(articleId).orElseThrow(()->new ArticleException(String.format("Article with %s not found", articleId)));
         Comment comment = new Comment();
         comment.setMessage(request.getMessage());
-        comment.setArticleId(articleId);
-        comment.setUserId(userService.findByEmail(email).getId());
+        comment.setArticle(article);
+        comment.setUser(userService.findByEmail(email));
         comment.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         commentRepository.save(comment);
     }
@@ -57,11 +60,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Integer articleId, Integer commentId, String email_user) {
-        Integer userId = userService.findByEmail(email_user).getId();
-        Integer authorCommentId = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(String.format("Comment with id: %s not found", commentId))).getUserId();
-        Integer authorArticleId = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(String.format("Article with id: %s not found", articleId))).getAuthorId();
+        User user = userService.findByEmail(email_user);
+        User authorComment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(String.format("Comment with id: %s not found", commentId))).getUser();
+        User authorArticle = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(String.format("Article with id: %s not found", articleId))).getUser();
 
-        if (userId.equals(authorArticleId) || userId.equals(authorCommentId)) {
+        if (user.equals(authorArticle) || user.equals(authorComment)) {
             commentRepository.deleteById(commentId);
         } else {
             log.error("IN deleteComment - comment can only be deleted by the author of the article or the author of the comment.");

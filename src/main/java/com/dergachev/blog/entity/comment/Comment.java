@@ -2,12 +2,12 @@ package com.dergachev.blog.entity.comment;
 
 import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "comment_table")
@@ -21,11 +21,15 @@ public class Comment {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "articleId", nullable = false)
-    private Integer articleId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
 
-    @Column(name = "userId", nullable = false, updatable = false)
-    private Integer userId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "createdAt", nullable = false, updatable = false)
     private String createdAt;

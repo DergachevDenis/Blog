@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Map;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
+@Transactional
 @RestController
 @RequestMapping("articles/{articleId}/comments")
 public class CommentController {
@@ -41,7 +43,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> addComment(HttpServletRequest httpServletRequest, @Valid @RequestBody CommentRequest request, BindingResult bindingResult, @PathVariable Integer articleID) {
+    public ResponseEntity<Map<String, String>> addComment(HttpServletRequest httpServletRequest, @Valid @RequestBody CommentRequest request, BindingResult bindingResult, @PathVariable Integer articleId) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -50,7 +52,7 @@ public class CommentController {
 
         String email_user = getEmailFromRequest(httpServletRequest);
         try {
-            commentService.addComment(request, articleID, email_user);
+            commentService.addComment(request, articleId, email_user);
             response.put("Message", String.format("Comment with text %s added in article!", request.getMessage()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (DataAccessException exception) {
@@ -61,14 +63,14 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getComments(@PathVariable Integer articleID,
+    public ResponseEntity<List<Comment>> getComments(@PathVariable Integer articleId,
                                                      @RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
                                                      @RequestParam(name = "author", required = false) Integer authorId,
                                                      @RequestParam(name = "sort", required = false, defaultValue = "message") String sort) {
 
 
-        List<Comment> comments = commentService.getComments(articleID, skip, limit, authorId, sort);
+        List<Comment> comments = commentService.getComments(articleId, skip, limit, authorId, sort);
         if (comments == null || comments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

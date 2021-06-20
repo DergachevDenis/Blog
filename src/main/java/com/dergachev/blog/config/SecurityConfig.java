@@ -1,6 +1,5 @@
 package com.dergachev.blog.config;
 
-import com.dergachev.blog.jwt.CustomUserDetailsService;
 import com.dergachev.blog.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

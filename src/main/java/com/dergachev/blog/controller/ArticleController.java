@@ -14,9 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -27,16 +26,20 @@ import static org.springframework.util.StringUtils.hasText;
 @Slf4j
 @RestController
 @RequestMapping("articles")
+@Transactional
 public class ArticleController {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
 
-    @Autowired
-    ArticleServiceImpl articleService;
+    private final ArticleServiceImpl articleService;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    JwtProvider jwtProvider;
+    public ArticleController(ArticleServiceImpl articleService, JwtProvider jwtProvider) {
+        this.articleService = articleService;
+        this.jwtProvider = jwtProvider;
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
@@ -94,8 +97,8 @@ public class ArticleController {
     public ResponseEntity<List<Article>> getArticles(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
                                                      @RequestParam(name = "q", required = false) String post_title,
-                                                     @RequestParam (name = "author", required = false) Integer authorId,
-                                                     @RequestParam (name = "sort", required = false, defaultValue = "title" ) String sort) {
+                                                     @RequestParam(name = "author", required = false) Integer authorId,
+                                                     @RequestParam(name = "sort", required = false, defaultValue = "title") String sort) {
 
 
         List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort);

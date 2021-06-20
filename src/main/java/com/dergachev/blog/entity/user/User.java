@@ -1,17 +1,21 @@
 package com.dergachev.blog.entity.user;
 
+import com.dergachev.blog.entity.article.Article;
+import com.dergachev.blog.entity.comment.Comment;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Table(name = "user_table")
 @Data
 @EqualsAndHashCode(of = {"id", "email"})
+@ToString(exclude = {"articles", "comments"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +40,12 @@ public class User {
     @CreationTimestamp
     @Column(name = "created", nullable = false, updatable = false)
     private Date createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    private Set<Article> articles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "roleTable")

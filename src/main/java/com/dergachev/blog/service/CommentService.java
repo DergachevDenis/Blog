@@ -8,8 +8,11 @@ import java.util.List;
 public interface CommentService {
 
     void addComment(CommentRequest request, Integer articleId, String email);
+
     List<Comment> getComments(Integer articleID, Integer skip, Integer limit, Integer authorId, String sort);
+
     Comment getComment(Integer commentId);
+
     void deleteComment(Integer id_article, Integer commentId, String email_user);
 
 }

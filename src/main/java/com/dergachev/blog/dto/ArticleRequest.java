@@ -1,8 +1,10 @@
 package com.dergachev.blog.dto;
 
+import com.dergachev.blog.entity.article.Tag;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 public class ArticleRequest {
@@ -14,4 +16,6 @@ public class ArticleRequest {
 
     @NotBlank(message = "Status cannot be empty")
     private String status;
+
+    private List<Tag> tags;
 }
