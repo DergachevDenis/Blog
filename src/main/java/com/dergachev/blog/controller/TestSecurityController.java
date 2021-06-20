@@ -12,6 +12,11 @@ public class TestSecurityController {
     @Autowired
     private MailSender mailSender;
 
+    @GetMapping("/exception")
+    public void getException(){
+        throw new RuntimeException("Hello world!");
+    }
+
     @GetMapping("/admin")
     public String getAdmin() {
         System.out.println("Hello");

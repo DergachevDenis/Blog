@@ -6,15 +6,16 @@ public class BlogDispatcherInit extends AbstractAnnotationConfigDispatcherServle
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
-                BlogWebConfig.class,
-                SecurityConfig.class,
-                RedisConfig.class
+                BlogWebConfig.class
         };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return null;
+        return new Class[]{
+                SecurityConfig.class,
+                RedisConfig.class
+        };
     }
 
     @Override
