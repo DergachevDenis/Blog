@@ -43,7 +43,9 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> addComment(HttpServletRequest httpServletRequest, @Valid @RequestBody CommentRequest request, BindingResult bindingResult, @PathVariable Integer articleId) {
+    public ResponseEntity<Map<String, String>> addComment(HttpServletRequest httpServletRequest,
+                                                          @Valid @RequestBody CommentRequest request,
+                                                          BindingResult bindingResult, @PathVariable Integer articleId) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -85,7 +87,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Map<String, String>> deleteComment(HttpServletRequest httpServletRequest, @PathVariable Integer articleId, @PathVariable Integer commentId) {
+    public ResponseEntity<Map<String, String>> deleteComment(HttpServletRequest httpServletRequest,
+                                                             @PathVariable Integer articleId,
+                                                             @PathVariable Integer commentId) {
         Map<String, String> response = new HashMap<>();
 
         String email_user = getEmailFromRequest(httpServletRequest);

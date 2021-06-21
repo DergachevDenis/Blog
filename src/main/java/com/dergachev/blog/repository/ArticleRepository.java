@@ -1,19 +1,14 @@
 package com.dergachev.blog.repository;
 
 import com.dergachev.blog.entity.article.Article;
-import com.dergachev.blog.entity.article.ArticleStatus;
-import com.dergachev.blog.entity.user.User;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
-
-    List<Article> findAllByStatus(ArticleStatus status);
 
     List<Article> findAllByUserId(Integer userId);
 
@@ -33,6 +28,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             nativeQuery = true)
     List<Article> findAllWithFiltersByTitleAndAuthorId(@Param("limit") Integer limit, @Param("skip") Integer skip, @Param("sort") String sort, @Param("order") String order, @Param("title") String title, @Param("authorId") Integer authorId);
 
-    @Query(value = "SELECT u FROM Article JOIN Tag u WHERE u.name IN :names")
-    List<Article> findArticleByTagList(@Param("names") List<String> tags);
+    @Query(value = "SELECT u FROM Article u JOIN u.tags t WHERE t.name IN :names")
+    Set<Article> findArticleByTagList(@Param("names") List<String> tags);
 }

@@ -1,8 +1,6 @@
 package com.dergachev.blog.repository;
 
-import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.entity.comment.Comment;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

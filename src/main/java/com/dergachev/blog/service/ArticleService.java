@@ -4,6 +4,7 @@ import com.dergachev.blog.dto.ArticleRequest;
 import com.dergachev.blog.entity.article.Article;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ArticleService {
 
@@ -17,5 +18,5 @@ public interface ArticleService {
 
     void deleteArticle(Integer id_article, String email);
 
-    List<Article> getArticlesTags(List<String> tags);
+    Set<Article> getArticlesTags(List<String> tags);
 }

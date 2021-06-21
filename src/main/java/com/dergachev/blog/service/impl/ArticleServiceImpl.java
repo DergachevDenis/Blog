@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -70,10 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticlesTags(List<String> tags) {
-        if (tags == null || tags.isEmpty()){
-            return articleRepository.findAll();
-        }
+    public Set<Article> getArticlesTags(List<String> tags) {
         return articleRepository.findArticleByTagList(tags);
     }
 

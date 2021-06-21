@@ -8,7 +8,6 @@ import com.dergachev.blog.service.impl.ArticleServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +20,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -43,7 +43,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest,
+                                                          @Valid @RequestBody ArticleRequest request,
+                                                          BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -63,7 +65,10 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest httpServletRequest,
+                                                           @Valid @RequestBody ArticleRequest request,
+                                                           BindingResult bindingResult,
+                                                           @PathVariable Integer id) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -98,9 +103,9 @@ public class ArticleController {
     }
 
     @GetMapping("/tags")
-    public ResponseEntity<List<Article>> getArticlesTags(@RequestParam(name = "tags", required = false) List<String> tags) {
+    public ResponseEntity<Set<Article>> getArticlesTags(@RequestParam(name = "tags", required = false) List<String> tags) {
 
-        List<Article> articles = articleService.getArticlesTags(tags);
+        Set<Article> articles = articleService.getArticlesTags(tags);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
