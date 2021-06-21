@@ -45,11 +45,7 @@ public class AuthController {
             userService.register(registrationRequest);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-        } catch (Exception exception) {
-            response.put("error", exception.getMessage());
-            log.error("IN registerUser - {}", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         response.put("message",
@@ -70,10 +66,7 @@ public class AuthController {
             response.put("Token:", userService.auth(request));
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception exception) {
-            log.error("IN authResponse - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(response);
@@ -87,10 +80,7 @@ public class AuthController {
             userService.activateUser(code);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception exception) {
-            log.error("IN activate - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -109,10 +99,7 @@ public class AuthController {
             userService.forgotPasswordEmail(forgotPasswordRequest);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
-            return new ResponseEntity(response, HttpStatus.NOT_FOUND);
-        } catch (Exception exception) {
-            log.error("IN forgotPassword - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(response, HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -131,10 +118,7 @@ public class AuthController {
             userService.resetPassword(request);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception exception) {
-            log.error("IN resetPassword - {}", exception.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

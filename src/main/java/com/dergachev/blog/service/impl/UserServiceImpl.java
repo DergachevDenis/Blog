@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         this.jwtProvider = jwtProvider;
     }
 
-    public void register(RegistrationRequest registrationRequest) throws UserException, MailException {
+    public void register(RegistrationRequest registrationRequest) throws UserException {
         User user = findByEmail(registrationRequest.getEmail());
         if (user != null) {
             log.error("IN register -  User with this email {} already exists", registrationRequest.getEmail());
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public void forgotPasswordEmail(ForgotPasswordRequest request) throws MailException, UserException {
+    public void forgotPasswordEmail(ForgotPasswordRequest request) throws UserException {
         String email = request.getEmail();
         User user = userRepository.findByEmail(email);
         if (user == null) {

@@ -53,15 +53,10 @@ public class CommentController {
         }
 
         String email_user = getEmailFromRequest(httpServletRequest);
-        try {
-            commentService.addComment(request, articleId, email_user);
-            response.put("Message", String.format("Comment with text %s added in article!", request.getMessage()));
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (DataAccessException exception) {
-            log.error("IN addComment - {}", exception.getMessage());
-            response.put("error", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        commentService.addComment(request, articleId, email_user);
+        response.put("Message", String.format("Comment with text %s added in article!", request.getMessage()));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -78,12 +73,10 @@ public class CommentController {
 
     @GetMapping("/{commentId}")
     public ResponseEntity<Comment> getComment(@PathVariable Integer commentId) {
-        try {
-            Comment comment = commentService.getComment(commentId);
-            return new ResponseEntity<>(comment, HttpStatus.OK);
-        } catch (CommentException commentException) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        Comment comment = commentService.getComment(commentId);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{commentId}")
@@ -101,10 +94,6 @@ public class CommentController {
         } catch (ArticleException articleException) {
             response.put("error", articleException.getMessage());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (DataAccessException exception) {
-            log.error("IN deleteComment - {}", exception.getMessage());
-            response.put("error", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

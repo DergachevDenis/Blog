@@ -3,6 +3,7 @@ package com.dergachev.blog.service.impl;
 import com.dergachev.blog.dto.ArticleRequest;
 import com.dergachev.blog.entity.article.*;
 import com.dergachev.blog.exception.ArticleException;
+import com.dergachev.blog.exception.NotFoundException;
 import com.dergachev.blog.repository.ArticleRepository;
 import com.dergachev.blog.repository.TagRepository;
 import com.dergachev.blog.repository.UserRepository;
@@ -36,7 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void editArticle(ArticleRequest request, Integer id_article, String email_user) {
-        Article article = articleRepository.findById(id_article).orElseThrow(() -> new ArticleException(String.format("Article with id: %s not found", id_article)));
+        Article article = articleRepository.findById(id_article).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", id_article)));
 
         if (!article.getUser().getId().equals(userRepository.findByEmail(email_user).getId())) {
             log.error("IN editArticle - Only the creator of the post can edit the article");
@@ -49,7 +50,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void addArticle(ArticleRequest request, String email) {
-        System.out.println("ТУТ1");
         Article article = new Article();
         fillArticle(request, email, article);
         article.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -83,7 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void deleteArticle(Integer id_article, String email_user) {
-        Article article = articleRepository.findById(id_article).orElseThrow(() -> new ArticleException(String.format("Article with id: %s not found", id_article)));
+        Article article = articleRepository.findById(id_article).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", id_article)));
 
         if (!article.getUser().getId().equals(userRepository.findByEmail(email_user).getId())) {
             log.error("IN editArticle - Only the creator of the post can edit the article");
