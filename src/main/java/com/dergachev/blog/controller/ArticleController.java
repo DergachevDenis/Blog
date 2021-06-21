@@ -8,7 +8,6 @@ import com.dergachev.blog.service.impl.ArticleServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +20,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -43,7 +43,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> addArticle(HttpServletRequest httpServletRequest,
+                                                          @Valid @RequestBody ArticleRequest request,
+                                                          BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -63,7 +65,10 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest httpServletRequest, @Valid @RequestBody ArticleRequest request, BindingResult bindingResult, @PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> editArticle(HttpServletRequest httpServletRequest,
+                                                           @Valid @RequestBody ArticleRequest request,
+                                                           BindingResult bindingResult,
+                                                           @PathVariable Integer id) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -85,42 +90,22 @@ public class ArticleController {
         }
     }
 
-/*    @GetMapping
-    public ResponseEntity<List<Article>> getPublicArticles() {
-        List<Article> articles = articleService.getPublicArticles();
-        if (articles == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(articles, HttpStatus.OK);
-    }*/
-
     @GetMapping
     public ResponseEntity<List<Article>> getArticles(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
                                                      @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
                                                      @RequestParam(name = "q", required = false) String post_title,
                                                      @RequestParam(name = "author", required = false) Integer authorId,
-                                                     @RequestParam(name = "sort", required = false, defaultValue = "title") String sort) {
+                                                     @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+                                                     @RequestParam(name = "order", required = false, defaultValue = "ASC") String order) {
 
-
-        List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort);
-        if (articles == null || articles.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        List<Article> articles = articleService.getArticles(skip, limit, post_title, authorId, sort, order);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<Page<Article>> getArticlesFilter(@RequestParam(name = "skip", required = false, defaultValue = "0") Integer skip,
-                                                           @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit,
-                                                           @RequestParam(name = "q", required = false) String post_title,
-                                                           @RequestParam(name = "author", required = false) Integer authorId,
-                                                           @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
-                                                           @RequestParam(name = "order", required = false) String order,
-                                                           @RequestParam(name = "tags", required = false) List<String> tags) {
-       Page <Article> articles = articleService.getArticlesFilter(skip, limit, post_title, authorId, sort, order,tags);
-        if (articles == null || articles.isEmpty()) {
-            return new ResponseEntity<>(articles, HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/tags")
+    public ResponseEntity<Set<Article>> getArticlesTags(@RequestParam(name = "tags", required = false) List<String> tags) {
+
+        Set<Article> articles = articleService.getArticlesTags(tags);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 

@@ -9,7 +9,7 @@ public interface CommentService {
 
     void addComment(CommentRequest request, Integer articleId, String email);
 
-    List<Comment> getComments(Integer articleID, Integer skip, Integer limit, Integer authorId, String sort);
+    List<Comment> getComments(Integer articleID, Integer skip, Integer limit, Integer userId, String sort, String order);
 
     Comment getComment(Integer commentId);
 

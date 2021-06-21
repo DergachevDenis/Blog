@@ -25,6 +25,7 @@ public class TagController {
     public TagController(TagServiceImpl tagService) {
         this.tagService = tagService;
     }
+
     @GetMapping
     public ResponseEntity<Map<String, Integer>> getPublicArticles() {
         Map<String, Integer> cloudTags = tagService.getTagsCloud();

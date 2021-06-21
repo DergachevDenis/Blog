@@ -3,7 +3,6 @@ package com.dergachev.blog.service.impl;
 import com.dergachev.blog.dto.ArticleRequest;
 import com.dergachev.blog.entity.article.*;
 import com.dergachev.blog.exception.ArticleException;
-import com.dergachev.blog.repository.ArticleCriteriaRepository;
 import com.dergachev.blog.repository.ArticleRepository;
 import com.dergachev.blog.repository.TagRepository;
 import com.dergachev.blog.repository.UserRepository;
@@ -11,15 +10,12 @@ import com.dergachev.blog.service.ArticleService;
 import com.dergachev.blog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -29,15 +25,13 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
-    private final ArticleCriteriaRepository articleCriteriaRepository;
 
     @Autowired
-    public ArticleServiceImpl(UserService userService, ArticleRepository articleRepository, UserRepository userRepository, TagRepository tagRepository, ArticleCriteriaRepository articleCriteriaRepository) {
+    public ArticleServiceImpl(UserService userService, ArticleRepository articleRepository, UserRepository userRepository, TagRepository tagRepository) {
         this.userService = userService;
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
         this.tagRepository = tagRepository;
-        this.articleCriteriaRepository = articleCriteriaRepository;
     }
 
     @Override
@@ -64,44 +58,21 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getPublicArticles() {
-        return articleRepository.findAllByStatus(ArticleStatus.PUBLIC);
+    public List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort, String order) {
+        if (title == null && authorId == null) {
+            return articleRepository.findAllWithFilters(limit, skip, sort, order);
+        } else if (title == null) {
+            return articleRepository.findAllWithFiltersByAuthorId(limit, skip, sort, order, authorId);
+        } else if (authorId == null) {
+            return articleRepository.findAllWithFiltersByTitle(limit, skip, sort, order, title);
+        } else {
+            return articleRepository.findAllWithFiltersByTitleAndAuthorId(limit, skip, sort, order, title, authorId);
+        }
     }
 
     @Override
-    public List<Article> getArticles(Integer skip, Integer limit, String title, Integer authorId, String sort) {
-        if (title == null && authorId == null) {
-            return articleRepository.findAll(PageRequest.of(skip, skip + limit, Sort.by(sort))).getContent();
-        } else if (title == null) {
-            return articleRepository.findAllByUserId(authorId, PageRequest.of(skip, skip + limit, Sort.by(sort)));
-        } else if (authorId == null) {
-            return articleRepository.findAllByTitle(title, PageRequest.of(skip, skip + limit, Sort.by(sort)));
-        } else {
-            return articleRepository.findByTitleAndUserId(title, authorId, PageRequest.of(skip, skip + limit, Sort.by(sort)));
-        }
-    }
-
-    public Page<Article> getArticlesFilter(Integer skip, Integer limit, String title, Integer authorId, String sort, String sortDir, List<String> tags) {
-        ArticlePage articlePage = new ArticlePage();
-        if (!Objects.nonNull(skip)) {
-            articlePage.setSkip(skip);
-        }
-        if (!Objects.nonNull(limit)) {
-            articlePage.setLimit(limit);
-        }
-        if (!Objects.nonNull(sort)) {
-            articlePage.setSortBy(sort);
-        }
-        Sort.Direction sortDirection = "desc".equalsIgnoreCase(sortDir) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        articlePage.setSortDirection(sortDirection);
-
-        ArticleSearchCriteria searchCriteria = new ArticleSearchCriteria();
-        searchCriteria.setTitle(title);
-        searchCriteria.setAuthorId(authorId);
-        searchCriteria.setTags(tags);
-
-        return articleCriteriaRepository.findAllWithFilters(articlePage, searchCriteria);
-
+    public Set<Article> getArticlesTags(List<String> tags) {
+        return articleRepository.findArticleByTagList(tags);
     }
 
     @Override

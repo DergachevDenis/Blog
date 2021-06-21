@@ -33,7 +33,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest,
+                                                            BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -51,12 +52,14 @@ public class AuthController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        response.put("message", String.format("The user has been created. Follow the link that we sent to %s to activate your account", registrationRequest.getEmail()));
+        response.put("message",
+                String.format("The user has been created. Follow the link that we sent to %s to activate your account", registrationRequest.getEmail()));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Map<String, String>> authResponse(@Valid @RequestBody AuthRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> authResponse(@Valid @RequestBody AuthRequest request,
+                                                            BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -94,7 +97,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/forgot_password")
-    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest,
+                                                              BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {
@@ -115,7 +119,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/reset")
-    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request,
+                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
         if (getMapResponseError(bindingResult, response)) {

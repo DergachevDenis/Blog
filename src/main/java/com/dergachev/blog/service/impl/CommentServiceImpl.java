@@ -11,8 +11,6 @@ import com.dergachev.blog.repository.CommentRepository;
 import com.dergachev.blog.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,11 +44,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getComments(Integer articleID, Integer skip, Integer limit, Integer userId, String sort) {
+    public List<Comment> getComments(Integer articleID, Integer skip, Integer limit, Integer userId, String sort, String order) {
         if (userId == null) {
-            return commentRepository.findAllByArticleId(articleID, PageRequest.of(skip, skip + limit, Sort.by(sort)));
+            return commentRepository.findAllWithFilters(limit, skip, sort, order, articleID);
         }
-        return commentRepository.findByArticleIdAndUserId(articleID, userId, PageRequest.of(skip, skip + limit, Sort.by(sort)));
+        return commentRepository.findAllWithFiltersByAuthorId(limit, skip, sort,order, userId, articleID);
     }
 
     @Override
