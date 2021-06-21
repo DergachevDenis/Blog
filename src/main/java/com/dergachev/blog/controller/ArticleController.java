@@ -7,7 +7,6 @@ import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.service.impl.ArticleServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -53,15 +52,9 @@ public class ArticleController {
         }
 
         String email_user = getEmailFromRequest(httpServletRequest);
-        try {
-            articleService.addArticle(request, email_user);
-            response.put("Message", String.format("Article with name %s created!", request.getTitle()));
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (DataAccessException exception) {
-            log.error("IN addArticle - {}", exception.getMessage());
-            response.put("error", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        articleService.addArticle(request, email_user);
+        response.put("Message", String.format("Article with name %s created!", request.getTitle()));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -75,18 +68,14 @@ public class ArticleController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        String email_user = getEmailFromRequest(httpServletRequest);
         try {
+            String email_user = getEmailFromRequest(httpServletRequest);
             articleService.editArticle(request, id, email_user);
             response.put("Message", String.format("Article with name %s update!", request.getTitle()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ArticleException articleException) {
-            response.put("error", articleException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (DataAccessException exception) {
-            log.error("IN editArticle - {}", exception.getMessage());
-            response.put("error", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("message", articleException.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
     }
 
@@ -113,9 +102,6 @@ public class ArticleController {
     public ResponseEntity<List<Article>> getMyArticles(HttpServletRequest httpServletRequest) {
         String email_user = getEmailFromRequest(httpServletRequest);
         List<Article> articles = articleService.getMyArticles(email_user);
-        if (articles == null || articles.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
@@ -123,19 +109,14 @@ public class ArticleController {
     public ResponseEntity<Map<String, String>> deleteArticle(HttpServletRequest httpServletRequest, @PathVariable Integer id) {
         Map<String, String> response = new HashMap<>();
 
-        String email_user = getEmailFromRequest(httpServletRequest);
-
         try {
+            String email_user = getEmailFromRequest(httpServletRequest);
             articleService.deleteArticle(id, email_user);
             response.put("message", "Article deleted");
             return new ResponseEntity(response, HttpStatus.OK);
         } catch (ArticleException articleException) {
-            response.put("error", articleException.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } catch (DataAccessException exception) {
-            log.error("IN deleteArticle - {}", exception.getMessage());
-            response.put("error", exception.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("message", articleException.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
     }
 

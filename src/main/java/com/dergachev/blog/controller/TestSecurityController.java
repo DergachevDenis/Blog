@@ -1,6 +1,7 @@
 package com.dergachev.blog.controller;
 
 
+import com.dergachev.blog.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
@@ -17,7 +18,7 @@ public class TestSecurityController {
 
     @GetMapping("/exception")
     public void getException(){
-        throw new RuntimeException("Hello world!");
+        throw new NotFoundException("Hello world!");
     }
 
     @GetMapping("/admin")
