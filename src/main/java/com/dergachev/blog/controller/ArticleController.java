@@ -14,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,6 @@ import static org.springframework.util.StringUtils.hasText;
 @Slf4j
 @RestController
 @RequestMapping("articles")
-@Transactional
 public class ArticleController {
 
     public static final String AUTHORIZATION = "Authorization";

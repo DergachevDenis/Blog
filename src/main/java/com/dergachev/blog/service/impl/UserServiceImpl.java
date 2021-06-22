@@ -16,6 +16,7 @@ import com.dergachev.blog.service.UserService;
 import com.mysql.cj.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.mail.MailException;
@@ -23,11 +24,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final RoleEntityRepository roleRepository;
@@ -38,7 +41,7 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> template, MailSenderService mailSenderService, JwtProvider jwtProvider) {
+    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, @Qualifier("redisTemplate") RedisTemplate<String, String> template, MailSenderService mailSenderService, JwtProvider jwtProvider) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

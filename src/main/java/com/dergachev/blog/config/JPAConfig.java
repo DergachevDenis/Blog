@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories("com.dergachev.blog.repository")
 @ComponentScan("com.dergachev.blog")
 @PropertySource("classpath:/blog.properties")
