@@ -27,10 +27,7 @@ public class UserServiceImplTest {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RedisTemplate<String, String> template;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     private static final String TEST_EMAIL = "dergache.di@gmail.com";
     private static final String TEST_CODE = "TEST CODE";

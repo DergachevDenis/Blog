@@ -31,7 +31,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest,
                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -52,7 +52,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/auth")
+    @PostMapping(value = "/auth", produces = "application/json")
     public ResponseEntity<Map<String, String>> authResponse(@Valid @RequestBody AuthRequest request,
                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -71,7 +71,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/auth/confirm/{code}")
+    @GetMapping(value = "/auth/confirm/{code}", produces = "application/json")
     public ResponseEntity<Map<String, String>> activate(@PathVariable String code) {
         Map<String, String> response = new HashMap<>();
 
@@ -85,7 +85,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/auth/forgot_password")
+    @PostMapping(value = "/auth/forgot_password", produces = "application/json")
     public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest,
                                                               BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -104,7 +104,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/auth/reset")
+    @PostMapping(value = "/auth/reset", produces = "application/json")
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request,
                                                              BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();

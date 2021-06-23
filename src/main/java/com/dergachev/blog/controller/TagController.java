@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("tags-cloud")
+@RequestMapping(value = "tags-cloud", produces = "application/json")
 public class TagController {
 
     private final TagServiceImpl tagService;
@@ -26,7 +26,7 @@ public class TagController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Integer>> getPublicArticles() {
+    public ResponseEntity<Map<String, Integer>> getTagsCloud() {
         Map<String, Integer> cloudTags = tagService.getTagsCloud();
         return new ResponseEntity<>(cloudTags, HttpStatus.OK);
     }

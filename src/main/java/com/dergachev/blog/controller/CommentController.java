@@ -23,7 +23,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @RestController
-@RequestMapping("articles/{articleId}/comments")
+@RequestMapping(value = "articles/{articleId}/comments", produces = "application/json")
 public class CommentController {
 
     public static final String AUTHORIZATION = "Authorization";

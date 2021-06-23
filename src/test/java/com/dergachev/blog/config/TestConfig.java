@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
 @PropertySource("classpath:/blog.properties")
 public class TestConfig {
 
-    @Bean
+   /* @Bean
     public RoleEntityRepository getRoleEntityRepository(){
         return mock(RoleEntityRepository.class);
     }
@@ -70,5 +70,5 @@ public class TestConfig {
     @Bean
     public CommentServiceImpl getCommentServiceImpl(){
         return new CommentServiceImpl(getUserService(), getCommentRepository(), getArticleRepository());
-    }
+    }*/
 }
