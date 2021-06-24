@@ -29,8 +29,7 @@ public class MailConfig {
     @Value("${mail.smtp.starttls.enable}")
     private String starttlsEnable;
 
-
-     @Bean
+    @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);

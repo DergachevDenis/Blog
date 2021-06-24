@@ -54,14 +54,4 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
-
-    public void addTag(Tag tag) {
-        tags.add(tag);
-        tag.getArticles().add(this);
-    }
-
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-        tag.getArticles().remove(this);
-    }
 }

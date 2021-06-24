@@ -31,7 +31,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/register", produces = "application/json")
+    @PostMapping(value = "/register")
     public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest,
                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();

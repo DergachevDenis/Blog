@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "tags-cloud", produces = "application/json")
+@RequestMapping(value = "tags-cloud")
 public class TagController {
 
     private final TagServiceImpl tagService;

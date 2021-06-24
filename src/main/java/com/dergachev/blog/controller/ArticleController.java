@@ -24,7 +24,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "articles", produces = "application/json")
+@RequestMapping(value = "articles")
 public class ArticleController {
 
     public static final String AUTHORIZATION = "Authorization";

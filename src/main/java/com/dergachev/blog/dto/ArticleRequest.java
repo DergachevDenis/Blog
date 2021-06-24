@@ -1,5 +1,6 @@
 package com.dergachev.blog.dto;
 
+import com.dergachev.blog.entity.article.ArticleStatus;
 import com.dergachev.blog.entity.article.Tag;
 import lombok.Data;
 
@@ -14,8 +15,12 @@ public class ArticleRequest {
     @NotBlank(message = "Text cannot be empty")
     private String text;
 
-    @NotBlank(message = "Status cannot be empty")
-    private String status;
+    private ArticleStatus status;
 
     private List<Tag> tags;
+
+    public void setStatus(String status) {
+        status = status.toUpperCase();
+        this.status = ArticleStatus.valueOf(status);
+    }
 }

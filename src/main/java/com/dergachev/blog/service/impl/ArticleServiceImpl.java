@@ -46,7 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new ArticleException("Only the creator of the post can edit the article");
         }
         fillArticle(request, email_user, article);
-        fillTagsArticle(request, article);
+        addTagsToArticle(request, article);
         articleRepository.save(article);
     }
 
@@ -55,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = new Article();
         fillArticle(request, email, article);
         article.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        fillTagsArticle(request, article);
+        addTagsToArticle(request, article);
         articleRepository.save(article);
     }
 
@@ -94,27 +94,27 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.deleteById(id_article);
     }
 
-    private ArticleStatus getArticleStatus(ArticleRequest request) {
+    /*private ArticleStatus getArticleStatus(ArticleRequest request) {
         return request.getStatus().equalsIgnoreCase("PUBLIC") ? ArticleStatus.PUBLIC : ArticleStatus.PRIVATE;
-    }
+    }*/
 
     private void fillArticle(ArticleRequest request, String email, Article article) {
         article.setTitle(request.getTitle());
         article.setText(request.getText());
-        article.setStatus(getArticleStatus(request));
+        article.setStatus(request.getStatus());
         article.setUser(userService.findByEmail(email));
         article.setUpdateAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 
-    private void fillTagsArticle(ArticleRequest request, Article article) {
+    private void addTagsToArticle(ArticleRequest request, Article article) {
         List<Tag> tags = request.getTags();
         for (Tag tag : tags) {
-            Tag newTag = tagRepository.findByName(tag.getName());
-            if (newTag == null) {
+            Tag existingTag = tagRepository.findByName(tag.getName());
+            if (existingTag == null) {
                 tagRepository.save(tag);
                 article.getTags().add(tag);
             } else {
-                article.getTags().add(newTag);
+                article.getTags().add(existingTag);
             }
         }
     }
