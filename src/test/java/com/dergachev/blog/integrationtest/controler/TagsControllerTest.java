@@ -1,36 +1,37 @@
-package com.dergachev.blog.controler;
+package com.dergachev.blog.integrationtest.controler;
 
-import com.dergachev.blog.config.*;
+import com.dergachev.blog.config.BlogDispatcherInit;
+import com.dergachev.blog.config.BlogWebInit;
+import com.dergachev.blog.config.BlogWebConfig;
+import com.dergachev.blog.config.SecurityConfig;
+import com.dergachev.blog.config.RedisConfig;
+import com.dergachev.blog.config.JPAConfig;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
+@WebAppConfiguration
 @ContextConfiguration(classes = {
+        BlogDispatcherInit.class,
+        BlogWebInit.class,
         BlogWebConfig.class,
         SecurityConfig.class,
         RedisConfig.class,
-      JPAConfig.class
-         }, loader = AnnotationConfigContextLoader.class)
-@WebAppConfiguration
+        JPAConfig.class
+         })
 public class TagsControllerTest {
 
     @Autowired

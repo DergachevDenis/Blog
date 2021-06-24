@@ -1,4 +1,4 @@
-package com.dergachev.blog.config;
+package com.dergachev.blog.junittest.config;
 
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.repository.ArticleRepository;
@@ -16,59 +16,54 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.mockito.Mockito.mock;
 
-@Configuration
+@Configuration()
 @PropertySource("classpath:/blog.properties")
 public class TestConfig {
 
-   /* @Bean
-    public RoleEntityRepository getRoleEntityRepository(){
+    @Bean
+    public RoleEntityRepository getRoleEntityRepository() {
         return mock(RoleEntityRepository.class);
     }
 
     @Bean
-    public UserRepository getUserRepository(){
+    public UserRepository getUserRepository() {
         return mock(UserRepository.class);
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder(){
+    public PasswordEncoder getPasswordEncoder() {
         return mock(PasswordEncoder.class);
     }
 
     @Bean
-    public RedisTemplate<String, String> getTemplate(){
+    public RedisTemplate<String, String> getTemplate() {
         return mock(RedisTemplate.class);
     }
 
     @Bean
-    public MailSenderService getMailSenderService(){
+    public MailSenderService getMailSenderService() {
         return mock(MailSenderService.class);
     }
 
     @Bean
-    public JwtProvider getJwtProvider(){
+    public JwtProvider getJwtProvider() {
         return mock(JwtProvider.class);
     }
 
     @Bean
-    public CommentRepository getCommentRepository(){
+    public CommentRepository getCommentRepository() {
         return mock(CommentRepository.class);
     }
 
     @Bean
-    public ArticleRepository getArticleRepository(){
+    public ArticleRepository getArticleRepository() {
         return mock(ArticleRepository.class);
     }
 
     @Bean
-    public UserServiceImpl getUserService(){
+    public UserServiceImpl getUserService() {
         return new UserServiceImpl(getRoleEntityRepository(), getUserRepository(),
-                                    getPasswordEncoder(), getTemplate(),
-                                    getMailSenderService(), getJwtProvider());
+                getPasswordEncoder(), getTemplate(),
+                getMailSenderService(), getJwtProvider());
     }
-
-    @Bean
-    public CommentServiceImpl getCommentServiceImpl(){
-        return new CommentServiceImpl(getUserService(), getCommentRepository(), getArticleRepository());
-    }*/
 }

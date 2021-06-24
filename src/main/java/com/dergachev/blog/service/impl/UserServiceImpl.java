@@ -23,6 +23,7 @@ import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(rollbackOn = UserException.class)
 public class UserServiceImpl implements UserService {
 
     private final RoleEntityRepository roleRepository;

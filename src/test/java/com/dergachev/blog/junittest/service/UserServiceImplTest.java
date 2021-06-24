@@ -1,16 +1,13 @@
-package com.dergachev.blog.service;
+package com.dergachev.blog.junittest.service;
 
-import com.dergachev.blog.config.TestConfig;
+import com.dergachev.blog.junittest.config.TestConfig;
 import com.dergachev.blog.dto.ResetPasswordRequest;
 import com.dergachev.blog.entity.user.User;
-import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.repository.UserRepository;
-import com.dergachev.blog.service.impl.UserServiceImpl;
+import com.dergachev.blog.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -19,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class UserServiceImplTest {
 
     @Autowired
