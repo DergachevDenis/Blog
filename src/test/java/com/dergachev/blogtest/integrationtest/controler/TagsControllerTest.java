@@ -1,4 +1,4 @@
-package com.dergachev.blog.integrationtest.controler;
+package com.dergachev.blogtest.integrationtest.controler;
 
 import com.dergachev.blog.config.BlogDispatcherInit;
 import com.dergachev.blog.config.BlogWebInit;
@@ -49,11 +49,4 @@ public class TagsControllerTest {
         mvc.perform(get("/admin")).andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
-
-   /* @GetMapping
-    public ResponseEntity<Map<String, Integer>> getTagsCloud() {
-        Map<String, Integer> cloudTags = tagService.getTagsCloud();
-        return new ResponseEntity<>(cloudTags, HttpStatus.OK);
-    }*/
-
 }

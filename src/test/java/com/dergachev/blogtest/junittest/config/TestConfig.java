@@ -1,4 +1,4 @@
-package com.dergachev.blog.junittest.config;
+package com.dergachev.blogtest.junittest.config;
 
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.repository.ArticleRepository;
