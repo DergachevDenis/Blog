@@ -80,11 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findByEmail(String email) {
-        User result = userRepository.findByEmail(email);
-        if (result == null) {
-            log.error("IN findByEmail - user by email: {} not found", email);
-        }
-        return result;
+        return userRepository.findByEmail(email);
     }
 
     public User findByEmailAndPassword(String email, String password) {

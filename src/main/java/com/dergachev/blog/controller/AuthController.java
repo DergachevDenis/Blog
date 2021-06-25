@@ -2,6 +2,7 @@ package com.dergachev.blog.controller;
 
 import com.dergachev.blog.dto.ForgotPasswordRequest;
 import com.dergachev.blog.dto.ResetPasswordRequest;
+import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.dto.AuthRequest;
 import com.dergachev.blog.dto.RegistrationRequest;
@@ -41,6 +42,7 @@ public class AuthController {
         }
 
         try {
+            User user = new User();
             userService.register(registrationRequest);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());

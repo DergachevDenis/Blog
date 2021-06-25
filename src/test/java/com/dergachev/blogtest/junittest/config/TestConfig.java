@@ -66,4 +66,5 @@ public class TestConfig {
                 getPasswordEncoder(), getTemplate(),
                 getMailSenderService(), getJwtProvider());
     }
+
 }
