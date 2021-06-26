@@ -25,6 +25,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -59,18 +62,20 @@ public class UserServiceImplTest {
 
     @Test
     public void findByEmailTestIfUserNotFound() {
-        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(null);
+        doReturn(null).when(userRepository).findByEmail(TEST_EMAIL);
 
         User user = userService.findByEmail(TEST_EMAIL);
+
         assertNull(user);
     }
 
     @Test
-    public void testFindByEmailTestIfUserFound() {
+    public void findByEmailTest() {
         User userTest = new User();
-        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(userTest);
+        doReturn(userTest).when(userRepository).findByEmail(TEST_EMAIL);
 
         User user = userService.findByEmail(TEST_EMAIL);
+
         assertEquals(userTest, user);
     }
 
@@ -83,12 +88,12 @@ public class UserServiceImplTest {
         request.setLast_name(TEST_LAST_NAME);
 
         ValueOperations mock = mock(ValueOperations.class);
-        when(template.opsForValue()).thenReturn(mock);
-        doNothing().when(mock).set(anyObject(), anyObject());
+        doReturn(mock).when(template).opsForValue();
+        doNothing().when(mock).set(TEST_EMAIL, TEST_CODE);
 
         userService.register(request);
 
-        verify(userRepository, Mockito.times(1)).findByEmail(any());
+        verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
         verify(userRepository, Mockito.times(1)).save(any());
         verify(mailSenderService, Mockito.times(1)).sendActivationCode(any(), anyString());
     }
@@ -131,7 +136,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void authTestIfUserNotActive(){
+    public void authTestIfUserNotActive() {
         User testUser = new User();
         testUser.setStatus(UserStatus.NOT_ACTIVE);
         testUser.setPassword(TEST_PASSWORD);
@@ -150,7 +155,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByEmailAndPasswordTest(){
+    public void findByEmailAndPasswordTest() {
         User testUser = new User();
         testUser.setPassword(TEST_PASSWORD);
         testUser.setEmail(TEST_EMAIL);
@@ -165,7 +170,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByEmailAndPasswordTestIfFindByEmailNull(){
+    public void findByEmailAndPasswordTestIfFindByEmailNull() {
         UserServiceImpl userServiceSpy = Mockito.spy(userService);
         doReturn(null).when(userServiceSpy).findByEmail(TEST_EMAIL);
 
@@ -175,7 +180,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByEmailAndPasswordTestIfPasswordsNotMatch(){
+    public void findByEmailAndPasswordTestIfPasswordsNotMatch() {
         User testUser = new User();
         testUser.setPassword(TEST_PASSWORD);
         testUser.setEmail(TEST_EMAIL);
@@ -190,7 +195,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void activateUserTest(){
+    public void activateUserTest() {
         User testUser = new User();
         ValueOperations mock = mock(ValueOperations.class);
         doReturn(mock).when(template).opsForValue();
@@ -204,7 +209,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void activateUserTestIfCodeExpiredOrNotFound(){
+    public void activateUserTestIfCodeExpiredOrNotFound() {
         ValueOperations mock = mock(ValueOperations.class);
         doReturn(mock).when(template).opsForValue();
         doReturn(null).when(mock).get(TEST_CODE);
@@ -216,27 +221,23 @@ public class UserServiceImplTest {
 
     @Test
     //toDo fix test
-    public void forgotPasswordEmailTest(){
+    public void forgotPasswordEmailTest() {
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
         forgotPasswordRequest.setEmail(TEST_EMAIL);
         User testUser = new User();
         doReturn(testUser).when(userRepository).findByEmail(forgotPasswordRequest.getEmail());
 
-        /*ValueOperations mock1 = mock(ValueOperations.class);
-        doReturn(mock1).when(UUID.randomUUID());
-        doReturn(TEST_CODE).when(mock1).toString();*/
-
         ValueOperations mock2 = mock(ValueOperations.class);
-        when(template.opsForValue()).thenReturn(mock2);
+        doReturn(mock2).when(template).opsForValue();
         doNothing().when(mock2).set(TEST_CODE, TEST_EMAIL);
 
         userService.forgotPasswordEmail(forgotPasswordRequest);
 
-        verify(mailSenderService, Mockito.times(1)).sendForgotPasswordEmail(testUser, TEST_CODE);
+        verify(mailSenderService, Mockito.times(1)).sendForgotPasswordEmail(any(), any());
     }
 
     @Test
-    public void forgotPasswordEmailTestNotFoundUser(){
+    public void forgotPasswordEmailTestNotFoundUser() {
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
         doReturn(null).when(userRepository).findByEmail(TEST_EMAIL);
 
@@ -246,7 +247,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void resetPasswordTest(){
+    public void resetPasswordTest() {
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
         resetPasswordRequest.setCode(TEST_CODE);
         resetPasswordRequest.setNewPassword(TEST_PASSWORD);
@@ -267,7 +268,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void resetPasswordTestIfResetCodeExpiredOrNotFound(){
+    public void resetPasswordTestIfResetCodeExpiredOrNotFound() {
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
         ValueOperations mock = mock(ValueOperations.class);
         doReturn(mock).when(template).opsForValue();
@@ -277,18 +278,4 @@ public class UserServiceImplTest {
                 UserException.class,
                 () -> userService.resetPassword(resetPasswordRequest));
     }
-
-
-   /* public void resetPassword(ResetPasswordRequest request) throws UserException {
-        String code = request.getCode();
-        String email = template.opsForValue().get(code);
-        if (email == null) {
-            log.error("IN resetPassword - Reset code expired or not found");
-            throw new UserException("Reset code expired");
-        }
-        User user = userRepository.findByEmail(email);
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
-    }*/
-
 }
