@@ -19,19 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-@Transactional(rollbackOn = UserException.class)
 public class UserServiceImpl implements UserService {
 
     private final RoleEntityRepository roleRepository;
@@ -51,6 +48,9 @@ public class UserServiceImpl implements UserService {
         this.jwtProvider = jwtProvider;
     }
 
+
+    @Transactional(rollbackFor = {UserException.class})
+    @Override
     public void register(RegistrationRequest registrationRequest) throws UserException {
         User user = findByEmail(registrationRequest.getEmail());
         if (user != null) {
@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional
     @Override
     public String auth(AuthRequest request) throws UserException {
         User user = findByEmailAndPassword(request.getEmail(), request.getPassword());
@@ -99,6 +100,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow((() -> new UserException(String.format("User with id: %s not found", id))));
     }
 
+    @Transactional
+    @Override
     public void activateUser(String code) throws UserException {
         String email = template.opsForValue().get(code);
         if (email == null) {
@@ -110,6 +113,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void forgotPasswordEmail(ForgotPasswordRequest request) throws UserException {
         String email = request.getEmail();
         User user = userRepository.findByEmail(email);
@@ -121,6 +125,7 @@ public class UserServiceImpl implements UserService {
         mailSenderService.sendForgotPasswordEmail(user, code);
     }
 
+    @Transactional
     public void resetPassword(ResetPasswordRequest request) throws UserException {
         String code = request.getCode();
         String email = template.opsForValue().get(code);

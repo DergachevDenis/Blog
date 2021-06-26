@@ -77,10 +77,10 @@ public class JPAConfig {
         return transactionManager;
     }
 
-    @Bean
+/*    @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
-    }
+    }*/
 
     public Properties additionalProperties() {
         Properties properties = new Properties();
