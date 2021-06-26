@@ -7,12 +7,12 @@ import com.dergachev.blog.dto.ResetPasswordRequest;
 import com.dergachev.blog.entity.user.UserStatus;
 import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.jwt.JwtProvider;
-import com.dergachev.blog.repository.RoleEntityRepository;
 import com.dergachev.blog.service.MailSenderService;
 import com.dergachev.blog.service.impl.UserServiceImpl;
 import com.dergachev.blogtest.junittest.config.TestConfig;
 import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -51,6 +51,12 @@ public class UserServiceImplTest {
     private static final String TEST_LAST_NAME = "Dergachev";
     private static final String TEST_TOKEN = "TOKEN";
     private static final String TEST_CODE = "Code";
+
+    @BeforeEach
+    public void initTest(){
+        reset(userRepository);
+        reset(mailSenderService);
+    }
 
     @Test
     public void findByEmailTestIfUserNotFound() {
