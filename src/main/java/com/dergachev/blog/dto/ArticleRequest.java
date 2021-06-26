@@ -2,7 +2,9 @@ package com.dergachev.blog.dto;
 
 import com.dergachev.blog.entity.article.ArticleStatus;
 import com.dergachev.blog.entity.article.Tag;
+import com.dergachev.blog.exception.ArticleException;
 import lombok.Data;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -15,12 +17,8 @@ public class ArticleRequest {
     @NotBlank(message = "Text cannot be empty")
     private String text;
 
-    private ArticleStatus status;
+    @NotBlank
+    private String status;
 
     private List<Tag> tags;
-
-    public void setStatus(String status) {
-        status = status.toUpperCase();
-        this.status = ArticleStatus.valueOf(status);
-    }
 }

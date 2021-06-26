@@ -50,7 +50,13 @@ public class ArticleController {
         }
 
         String email_user = getEmailFromRequest(httpServletRequest);
-        articleService.addArticle(request, email_user);
+        try {
+            articleService.addArticle(request, email_user);
+        }
+        catch (ArticleException exception){
+            response.put("message", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
         response.put("Message", String.format("Article with name %s created!", request.getTitle()));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

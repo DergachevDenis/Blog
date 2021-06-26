@@ -11,6 +11,7 @@ import com.dergachev.blog.service.ArticleService;
 import com.dergachev.blog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -94,16 +95,24 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.deleteById(id_article);
     }
 
-    /*private ArticleStatus getArticleStatus(ArticleRequest request) {
-        return request.getStatus().equalsIgnoreCase("PUBLIC") ? ArticleStatus.PUBLIC : ArticleStatus.PRIVATE;
-    }*/
-
     private void fillArticle(ArticleRequest request, String email, Article article) {
         article.setTitle(request.getTitle());
         article.setText(request.getText());
-        article.setStatus(request.getStatus());
+        article.setStatus(getStatusArticle(request.getStatus()));
         article.setUser(userService.findByEmail(email));
         article.setUpdateAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+    }
+
+    private ArticleStatus getStatusArticle(String statusDto) {
+        ArticleStatus status;
+        statusDto = statusDto.toUpperCase();
+        try {
+           status = ArticleStatus.valueOf(statusDto);
+        }
+        catch (IllegalArgumentException exception){
+            throw new ArticleException("Invalid article status");
+        }
+        return status;
     }
 
     private void addTagsToArticle(ArticleRequest request, Article article) {

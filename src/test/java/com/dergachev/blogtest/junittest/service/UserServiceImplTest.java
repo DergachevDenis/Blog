@@ -24,10 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -41,8 +37,6 @@ public class UserServiceImplTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleEntityRepository roleEntityRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RedisTemplate<String, String> template;
@@ -51,14 +45,12 @@ public class UserServiceImplTest {
     @Autowired
     private JwtProvider jwtProvider;
 
-
     private static final String TEST_EMAIL = "dergache.di@gmail.com";
     private static final String TEST_PASSWORD = "Denis123";
     private static final String TEST_FIRST_NAME = "Denis";
     private static final String TEST_LAST_NAME = "Dergachev";
     private static final String TEST_TOKEN = "TOKEN";
     private static final String TEST_CODE = "Code";
-
 
     @Test
     public void findByEmailTestIfUserNotFound() {
@@ -257,9 +249,9 @@ public class UserServiceImplTest {
         ValueOperations mock = mock(ValueOperations.class);
         doReturn(mock).when(template).opsForValue();
         doReturn(TEST_EMAIL).when(mock).get(TEST_CODE);
-
         doReturn(TEST_PASSWORD).when(passwordEncoder).encode(resetPasswordRequest.getNewPassword());
         doReturn(testUser).when(userRepository).findByEmail(TEST_EMAIL);
+
         userService.resetPassword(resetPasswordRequest);
 
         assertEquals(testUser.getPassword(), TEST_PASSWORD);
