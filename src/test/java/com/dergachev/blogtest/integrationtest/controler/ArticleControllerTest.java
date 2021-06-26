@@ -95,7 +95,7 @@ public class ArticleControllerTest {
     public void addArticleWithoutAuthorization() throws Exception {
         this.mvc.perform(post("/articles"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
