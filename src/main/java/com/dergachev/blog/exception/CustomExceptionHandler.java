@@ -7,8 +7,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
-
 @ControllerAdvice
 @Slf4j
 public class CustomExceptionHandler {
@@ -42,6 +40,4 @@ public class CustomExceptionHandler {
         log.error("IN handleResponseException - {}, {}", exception.getClass().getName(),exception.getMessage());
         return new ResponseEntity<>(responseException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 }
