@@ -11,6 +11,6 @@ public class ResetPasswordRequest {
     private String code;
 
     @NotBlank(message = "Password cannot be empty")
-    @Pattern(regexp = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$)", message = "Password must contain 6 characters using numbers, symbols, Latin alphabet, lowercase and uppercase characters")
+    @Pattern(regexp = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$)", message = "Password must contain 6 characters using numbers, symbols, latin alphabet, lowercase and uppercase characters")
     private String newPassword;
 }

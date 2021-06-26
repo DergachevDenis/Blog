@@ -3,12 +3,10 @@ package com.dergachev.blog.controller;
 import com.dergachev.blog.dto.CommentRequest;
 import com.dergachev.blog.entity.comment.Comment;
 import com.dergachev.blog.exception.ArticleException;
-import com.dergachev.blog.exception.CommentException;
 import com.dergachev.blog.jwt.JwtProvider;
 import com.dergachev.blog.service.impl.CommentServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +22,8 @@ import java.util.Map;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
-@Transactional
 @RestController
-@RequestMapping("articles/{articleId}/comments")
+@RequestMapping(value = "articles/{articleId}/comments")
 public class CommentController {
 
     public static final String AUTHORIZATION = "Authorization";

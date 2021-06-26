@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +25,8 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @RestController
-@RequestMapping("articles")
-@Transactional
+@RequestMapping(value = "articles")
+@Validated
 public class ArticleController {
 
     public static final String AUTHORIZATION = "Authorization";
@@ -47,12 +47,20 @@ public class ArticleController {
                                                           BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
 
+        System.out.println(request);
+        System.out.println(bindingResult);
         if (getMapResponseError(bindingResult, response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         String email_user = getEmailFromRequest(httpServletRequest);
-        articleService.addArticle(request, email_user);
+        try {
+            articleService.addArticle(request, email_user);
+        }
+        catch (ArticleException exception){
+            response.put("message", exception.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
         response.put("Message", String.format("Article with name %s created!", request.getTitle()));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

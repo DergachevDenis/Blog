@@ -10,7 +10,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 @PropertySource("classpath:blog.properties")
 public class MailSenderServiceImpl implements MailSenderService {
     private final static String ACTIVATION_MESSAGE = "Hello %s! Welcome to site. Please, visit next link to confirm email: http://localhost:8075/activate/%s";

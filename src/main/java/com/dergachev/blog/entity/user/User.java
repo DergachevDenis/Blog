@@ -4,7 +4,6 @@ import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.entity.comment.Comment;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 

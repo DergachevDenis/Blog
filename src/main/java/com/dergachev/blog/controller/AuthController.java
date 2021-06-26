@@ -2,6 +2,7 @@ package com.dergachev.blog.controller;
 
 import com.dergachev.blog.dto.ForgotPasswordRequest;
 import com.dergachev.blog.dto.ResetPasswordRequest;
+import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.dto.AuthRequest;
 import com.dergachev.blog.dto.RegistrationRequest;
@@ -14,13 +15,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Transactional
+
 @RestController
 @Slf4j
 public class AuthController {
@@ -32,7 +32,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register")
     public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest,
                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -42,6 +42,7 @@ public class AuthController {
         }
 
         try {
+            User user = new User();
             userService.register(registrationRequest);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
@@ -53,7 +54,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/auth")
+    @PostMapping(value = "/auth", produces = "application/json")
     public ResponseEntity<Map<String, String>> authResponse(@Valid @RequestBody AuthRequest request,
                                                             BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -72,7 +73,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/auth/confirm/{code}")
+    @GetMapping(value = "/auth/confirm/{code}", produces = "application/json")
     public ResponseEntity<Map<String, String>> activate(@PathVariable String code) {
         Map<String, String> response = new HashMap<>();
 
@@ -86,7 +87,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/auth/forgot_password")
+    @PostMapping(value = "/auth/forgot_password", produces = "application/json")
     public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest,
                                                               BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();
@@ -105,7 +106,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/auth/reset")
+    @PostMapping(value = "/auth/reset", produces = "application/json")
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request,
                                                              BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();

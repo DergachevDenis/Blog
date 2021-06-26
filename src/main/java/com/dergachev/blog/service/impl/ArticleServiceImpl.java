@@ -11,8 +11,10 @@ import com.dergachev.blog.service.ArticleService;
 import com.dergachev.blog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
+@Transactional
 public class ArticleServiceImpl implements ArticleService {
 
     private final UserService userService;
@@ -44,7 +47,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new ArticleException("Only the creator of the post can edit the article");
         }
         fillArticle(request, email_user, article);
-        fillTagsArticle(request, article);
+        addTagsToArticle(request, article);
         articleRepository.save(article);
     }
 
@@ -53,7 +56,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = new Article();
         fillArticle(request, email, article);
         article.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        fillTagsArticle(request, article);
+        addTagsToArticle(request, article);
         articleRepository.save(article);
     }
 
@@ -92,27 +95,35 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.deleteById(id_article);
     }
 
-    private ArticleStatus getArticleStatus(ArticleRequest request) {
-        return request.getStatus().equalsIgnoreCase("PUBLIC") ? ArticleStatus.PUBLIC : ArticleStatus.PRIVATE;
-    }
-
     private void fillArticle(ArticleRequest request, String email, Article article) {
         article.setTitle(request.getTitle());
         article.setText(request.getText());
-        article.setStatus(getArticleStatus(request));
+        article.setStatus(getStatusArticle(request.getStatus()));
         article.setUser(userService.findByEmail(email));
         article.setUpdateAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 
-    private void fillTagsArticle(ArticleRequest request, Article article) {
+    private ArticleStatus getStatusArticle(String statusDto) {
+        ArticleStatus status;
+        statusDto = statusDto.toUpperCase();
+        try {
+           status = ArticleStatus.valueOf(statusDto);
+        }
+        catch (IllegalArgumentException exception){
+            throw new ArticleException("Invalid article status");
+        }
+        return status;
+    }
+
+    private void addTagsToArticle(ArticleRequest request, Article article) {
         List<Tag> tags = request.getTags();
         for (Tag tag : tags) {
-            Tag newTag = tagRepository.findByName(tag.getName());
-            if (newTag == null) {
+            Tag existingTag = tagRepository.findByName(tag.getName());
+            if (existingTag == null) {
                 tagRepository.save(tag);
                 article.getTags().add(tag);
             } else {
-                article.getTags().add(newTag);
+                article.getTags().add(existingTag);
             }
         }
     }

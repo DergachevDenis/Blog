@@ -38,7 +38,7 @@ public class JwtProvider {
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             log.error("IN validateToken - invalid token");
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            return false;
         }
     }
 
