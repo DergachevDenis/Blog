@@ -64,27 +64,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         JPAConfig.class
 })
 public class ArticleControllerTest {
+
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ArticleRepository articleRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtProvider jwtProvider;
-
     @Autowired
     private RoleEntityRepository roleEntityRepository;
-
     @Autowired
-    WebApplicationContext wac;
+    private WebApplicationContext wac;
 
     private MockMvc mvc;
 
-    private Gson gsonInstance = new Gson();
+    private final Gson gsonInstance = new Gson();
 
     @BeforeEach
     public void setup() {
@@ -121,12 +117,7 @@ public class ArticleControllerTest {
         String token = getTokenFromUser(user);
 
         Article article = new Article();
-        article.setUser(user);
-        article.setTitle("Test");
-        article.setText("Test text");
-        article.setStatus(ArticleStatus.PUBLIC);
-        article.setCreatedAt("12.12.2021");
-        article.setUpdateAt("12.12.2021");
+        fillArticle(user, article);
         articleRepository.save(article);
 
         MvcResult mvcResult = this.mvc.perform(get("/articles").header("Authorization", "Bearer " + token))
@@ -150,14 +141,9 @@ public class ArticleControllerTest {
         User user = createUser();
         String token = getTokenFromUser(user);
         ArticleRequest articleRequest = new ArticleRequest();
-        articleRequest.setTitle("Test");
-        articleRequest.setText("Test text");
-        articleRequest.setStatus("Public");
-        articleRequest.setTags(new ArrayList<Tag>());
+        fillArticleRequest(articleRequest);
 
         String json = gsonInstance.toJson(articleRequest);
-
-        System.out.println(json);
 
         this.mvc.perform(post("/articles").header("Authorization", "Bearer " + token).contentType("application/json").content(json))
                 .andDo(print())
@@ -179,5 +165,21 @@ public class ArticleControllerTest {
         user.setRoleEntity(authorRole);
         userRepository.save(user);
         return user;
+    }
+
+    private void fillArticle(User user, Article article) {
+        article.setUser(user);
+        article.setTitle("Test");
+        article.setText("Test text");
+        article.setStatus(ArticleStatus.PUBLIC);
+        article.setCreatedAt("12.12.2021");
+        article.setUpdateAt("12.12.2021");
+    }
+
+    private void fillArticleRequest(ArticleRequest articleRequest) {
+        articleRequest.setTitle("Test");
+        articleRequest.setText("Test text");
+        articleRequest.setStatus("Public");
+        articleRequest.setTags(new ArrayList<Tag>());
     }
 }

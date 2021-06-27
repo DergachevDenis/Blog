@@ -104,7 +104,6 @@ public class UserServiceImplTest {
         request.setFirst_name(TEST_FIRST_NAME);
         request.setLast_name(TEST_LAST_NAME);
 
-        //toDo: find out how to remove duplicated code
         UserServiceImpl userServiceSpy = Mockito.spy(userService);
         doReturn(new User()).when(userServiceSpy).findByEmail(request.getEmail());
 
@@ -218,7 +217,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    //toDo fix test
     public void forgotPasswordEmailTest() {
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
         forgotPasswordRequest.setEmail(TEST_EMAIL);

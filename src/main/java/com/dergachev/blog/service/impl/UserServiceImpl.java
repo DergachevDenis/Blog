@@ -80,10 +80,12 @@ public class UserServiceImpl implements UserService {
         return jwtProvider.generateToken(user.getEmail());
     }
 
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
     public User findByEmailAndPassword(String email, String password) {
         User result = findByEmail(email);
         if (result == null) {
@@ -96,6 +98,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public User findById(Integer id) throws UserException {
         return userRepository.findById(id).orElseThrow((() -> new UserException(String.format("User with id: %s not found", id))));
     }
@@ -114,6 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @Override
     public void forgotPasswordEmail(ForgotPasswordRequest request) throws UserException {
         String email = request.getEmail();
         User user = userRepository.findByEmail(email);
@@ -126,6 +130,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @Override
     public void resetPassword(ResetPasswordRequest request) throws UserException {
         String code = request.getCode();
         String email = template.opsForValue().get(code);
