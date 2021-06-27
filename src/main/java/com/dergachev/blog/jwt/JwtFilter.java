@@ -36,17 +36,19 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
-        if (token != null && jwtProvider.validateToken(token)) {
-            String email = jwtProvider.getEmailFromToken(token);
-            CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        } else {
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().println(("{ \"error\": \"Invalid token\" }"));
-            return;
+        if (token != null) {
+            if (jwtProvider.validateToken(token)) {
+                String email = jwtProvider.getEmailFromToken(token);
+                CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                HttpServletResponse response = (HttpServletResponse) servletResponse;
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getOutputStream().println(("{ \"error\": \"Invalid token\" }"));
+                return;
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

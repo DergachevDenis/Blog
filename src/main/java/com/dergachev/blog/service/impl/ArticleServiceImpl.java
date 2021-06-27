@@ -11,7 +11,6 @@ import com.dergachev.blog.service.ArticleService;
 import com.dergachev.blog.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

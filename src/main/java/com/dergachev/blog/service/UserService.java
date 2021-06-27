@@ -1,7 +1,9 @@
 package com.dergachev.blog.service;
 
 import com.dergachev.blog.dto.AuthRequest;
+import com.dergachev.blog.dto.ForgotPasswordRequest;
 import com.dergachev.blog.dto.RegistrationRequest;
+import com.dergachev.blog.dto.ResetPasswordRequest;
 import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.exception.UserException;
 
@@ -18,4 +20,8 @@ public interface UserService {
     User findById(Integer id) throws UserException;
 
     void activateUser(String code) throws UserException;
+
+    public void forgotPasswordEmail(ForgotPasswordRequest request);
+
+    public void resetPassword(ResetPasswordRequest request);
 }

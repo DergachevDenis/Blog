@@ -1,0 +1,24 @@
+version: "3.9"
+    
+services:
+  db:
+    image: mysql:8.0.25
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: my_blog
+      MYSQL_ROOT_PASSWORD: 19930305
+
+  redis:
+    image: redis:6.2.4
+
+  my_blog:
+    depends_on:
+      - db
+      - redis
+    build: .
+    ports:
+      - "8075:8080"
+volumes:
+  db_data: {}
+
