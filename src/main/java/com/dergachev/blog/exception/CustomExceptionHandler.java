@@ -6,12 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @ControllerAdvice
 @Slf4j
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(value = {NotFoundException.class})
+    @ExceptionHandler(value = {NotFoundException.class, UsernameNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleResponseNotFoundException(NotFoundException exception) {
         ExceptionResponse responseException = ExceptionResponse
                 .builder()
