@@ -9,9 +9,15 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class DbInit {
+
     private static final String ROLE_USER = "ROLE_USER";
+
+    private final RoleEntityRepository roleEntityRepository;
+
     @Autowired
-    private RoleEntityRepository roleEntityRepository;
+    public DbInit(RoleEntityRepository roleEntityRepository) {
+        this.roleEntityRepository = roleEntityRepository;
+    }
 
     @PostConstruct
     private void postConstruct() {

@@ -16,6 +16,7 @@ import java.util.*;
 @EqualsAndHashCode(of = {"id", "email"})
 @ToString(exclude = {"articles", "comments"})
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

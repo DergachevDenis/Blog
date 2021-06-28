@@ -6,6 +6,7 @@ import javax.validation.constraints.*;
 
 @Data
 public class RegistrationRequest {
+
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Please enter a valid email")
     private String email;

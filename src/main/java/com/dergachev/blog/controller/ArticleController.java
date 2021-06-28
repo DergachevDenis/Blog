@@ -4,7 +4,7 @@ import com.dergachev.blog.dto.ArticleRequest;
 import com.dergachev.blog.entity.article.Article;
 import com.dergachev.blog.exception.ArticleException;
 import com.dergachev.blog.jwt.JwtProvider;
-import com.dergachev.blog.service.impl.ArticleServiceImpl;
+import com.dergachev.blog.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,11 +32,11 @@ public class ArticleController {
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
 
-    private final ArticleServiceImpl articleService;
+    private final ArticleService articleService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public ArticleController(ArticleServiceImpl articleService, JwtProvider jwtProvider) {
+    public ArticleController(ArticleService articleService, JwtProvider jwtProvider) {
         this.articleService = articleService;
         this.jwtProvider = jwtProvider;
     }

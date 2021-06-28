@@ -39,7 +39,14 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public UserServiceImpl(RoleEntityRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, @Qualifier("redisTemplate") RedisTemplate<String, String> template, MailSenderService mailSenderService, JwtProvider jwtProvider) {
+    public UserServiceImpl(
+            RoleEntityRepository roleRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            @Qualifier("redisTemplate") RedisTemplate<String, String> template,
+            MailSenderService mailSenderService,
+            JwtProvider jwtProvider)
+    {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -49,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Transactional(rollbackFor = {UserException.class})
+    @Transactional()
     @Override
     public void register(RegistrationRequest registrationRequest) throws UserException {
         User user = findByEmail(registrationRequest.getEmail());

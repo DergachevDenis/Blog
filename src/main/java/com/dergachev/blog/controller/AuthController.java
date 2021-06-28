@@ -2,7 +2,6 @@ package com.dergachev.blog.controller;
 
 import com.dergachev.blog.dto.ForgotPasswordRequest;
 import com.dergachev.blog.dto.ResetPasswordRequest;
-import com.dergachev.blog.entity.user.User;
 import com.dergachev.blog.exception.UserException;
 import com.dergachev.blog.dto.AuthRequest;
 import com.dergachev.blog.dto.RegistrationRequest;
@@ -19,7 +18,6 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 @Slf4j
@@ -42,7 +40,6 @@ public class AuthController {
         }
 
         try {
-            User user = new User();
             userService.register(registrationRequest);
         } catch (UserException userException) {
             response.put("error", userException.getMessage());
@@ -106,7 +103,7 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/auth/reset", produces = "application/json")
+    @PostMapping(value = "/auth/reset")
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request,
                                                              BindingResult bindingResult) {
         Map<String, String> response = new HashMap<>();

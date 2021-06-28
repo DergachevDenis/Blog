@@ -8,12 +8,12 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "comment_table")
 @Data
 @EqualsAndHashCode(of = {"id"})
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

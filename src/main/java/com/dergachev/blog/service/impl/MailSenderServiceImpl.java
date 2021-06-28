@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 @Transactional
 @PropertySource("classpath:blog.properties")
 public class MailSenderServiceImpl implements MailSenderService {
+
     private final static String ACTIVATION_MESSAGE = "Hello %s! Welcome to site. Please, visit next link to confirm email: http://localhost:8075/activate/%s";
     private final static String SUBJECT_ACTIVATION = "Activation code";
     private final static String FORGOT_PASSWORD_MESSAGE = "Hello %s! Your password reset code: %s";

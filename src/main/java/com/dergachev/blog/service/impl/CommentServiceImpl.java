@@ -35,12 +35,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(CommentRequest request, Integer articleId, String email) {
+    public void addComment(CommentRequest request, Integer articleId, String userEmail) {
         Article article = articleRepository.findById(articleId).orElseThrow(()->new NotFoundException(String.format("Article with %s not found", articleId)));
         Comment comment = new Comment();
         comment.setMessage(request.getMessage());
         comment.setArticle(article);
-        comment.setUser(userService.findByEmail(email));
+        comment.setUser(userService.findByEmail(userEmail));
         comment.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         commentRepository.save(comment);
     }
@@ -59,8 +59,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Integer articleId, Integer commentId, String email_user) {
-        User user = userService.findByEmail(email_user);
+    public void deleteComment(Integer articleId, Integer commentId, String userEmail) {
+        User user = userService.findByEmail(userEmail);
         User authorComment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(String.format("Comment with id: %s not found", commentId))).getUser();
         User authorArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", articleId))).getUser();
 

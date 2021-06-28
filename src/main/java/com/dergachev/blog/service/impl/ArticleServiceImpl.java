@@ -38,22 +38,22 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void editArticle(ArticleRequest request, Integer id_article, String email_user) {
-        Article article = articleRepository.findById(id_article).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", id_article)));
+    public void editArticle(ArticleRequest request, Integer articleId, String userEmail) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", articleId)));
 
-        if (!article.getUser().getId().equals(userRepository.findByEmail(email_user).getId())) {
+        if (!article.getUser().getId().equals(userRepository.findByEmail(userEmail).getId())) {
             log.error("IN editArticle - Only the creator of the post can edit the article");
             throw new ArticleException("Only the creator of the post can edit the article");
         }
-        fillArticle(request, email_user, article);
+        fillArticle(request, userEmail, article);
         addTagsToArticle(request, article);
         articleRepository.save(article);
     }
 
     @Override
-    public void addArticle(ArticleRequest request, String email) {
+    public void addArticle(ArticleRequest request, String userEmail) {
         Article article = new Article();
-        fillArticle(request, email, article);
+        fillArticle(request, userEmail, article);
         article.setCreatedAt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         addTagsToArticle(request, article);
         articleRepository.save(article);
@@ -78,20 +78,20 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getMyArticles(String email_user) {
-        Integer authorId = userRepository.findByEmail(email_user).getId();
+    public List<Article> getMyArticles(String userEmail) {
+        Integer authorId = userRepository.findByEmail(userEmail).getId();
         return articleRepository.findAllByUserId(authorId);
     }
 
     @Override
-    public void deleteArticle(Integer id_article, String email_user) {
-        Article article = articleRepository.findById(id_article).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", id_article)));
+    public void deleteArticle(Integer articleId, String userEmail) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(String.format("Article with id: %s not found", articleId)));
 
-        if (!article.getUser().getId().equals(userRepository.findByEmail(email_user).getId())) {
+        if (!article.getUser().getId().equals(userRepository.findByEmail(userEmail).getId())) {
             log.error("IN editArticle - Only the creator of the post can edit the article");
             throw new ArticleException("Only the creator of the post can edit the article");
         }
-        articleRepository.deleteById(id_article);
+        articleRepository.deleteById(articleId);
     }
 
     private void fillArticle(ArticleRequest request, String email, Article article) {

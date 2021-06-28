@@ -50,7 +50,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @EnableWebSecurity
@@ -127,8 +126,7 @@ public class ArticleControllerTest {
                 .andReturn();
 
         String body = mvcResult.getResponse().getContentAsString();
-        Type collectionType = new TypeToken<List<Article>>() {
-        }.getType();
+        Type collectionType = new TypeToken<List<Article>>() {}.getType();
         List<Article> articleList = gsonInstance.fromJson(body, collectionType);
 
         assertEquals(1, articleList.size());

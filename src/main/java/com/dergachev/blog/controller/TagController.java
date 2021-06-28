@@ -2,8 +2,6 @@ package com.dergachev.blog.controller;
 
 
 import com.dergachev.blog.service.TagService;
-import com.dergachev.blog.service.impl.TagServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +16,10 @@ import java.util.Map;
 @RequestMapping(value = "tags-cloud")
 public class TagController {
 
-    private final TagServiceImpl tagService;
+    private final TagService tagService;
 
     @Autowired
-    public TagController(TagServiceImpl tagService) {
+    public TagController(TagService tagService) {
         this.tagService = tagService;
     }
 
