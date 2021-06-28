@@ -21,7 +21,7 @@ public interface UserService {
 
     void activateUser(String code) throws UserException;
 
-    public void forgotPasswordEmail(ForgotPasswordRequest request);
+    void forgotPasswordEmail(ForgotPasswordRequest request);
 
-    public void resetPassword(ResetPasswordRequest request);
+    void resetPassword(ResetPasswordRequest request);
 }

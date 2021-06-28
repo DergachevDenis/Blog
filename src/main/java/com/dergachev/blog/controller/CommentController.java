@@ -4,7 +4,7 @@ import com.dergachev.blog.dto.CommentRequest;
 import com.dergachev.blog.entity.comment.Comment;
 import com.dergachev.blog.exception.ArticleException;
 import com.dergachev.blog.jwt.JwtProvider;
-import com.dergachev.blog.service.impl.CommentServiceImpl;
+import com.dergachev.blog.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +29,11 @@ public class CommentController {
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public CommentController(CommentServiceImpl commentService, JwtProvider jwtProvider) {
+    public CommentController(CommentService commentService, JwtProvider jwtProvider) {
         this.commentService = commentService;
         this.jwtProvider = jwtProvider;
     }

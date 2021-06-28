@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(of = {"name"})
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

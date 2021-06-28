@@ -6,7 +6,6 @@ import com.dergachev.blog.repository.CommentRepository;
 import com.dergachev.blog.repository.RoleEntityRepository;
 import com.dergachev.blog.repository.UserRepository;
 import com.dergachev.blog.service.MailSenderService;
-import com.dergachev.blog.service.impl.CommentServiceImpl;
 import com.dergachev.blog.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

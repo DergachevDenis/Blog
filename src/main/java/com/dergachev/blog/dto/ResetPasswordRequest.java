@@ -7,6 +7,7 @@ import javax.validation.constraints.Pattern;
 
 @Data
 public class ResetPasswordRequest {
+
     @NotBlank(message = "Code cannot be empty")
     private String code;
 

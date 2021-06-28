@@ -12,6 +12,7 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:blog.properties")
 public class MailConfig {
+
     @Value("${spring.mail.host}")
     private String host;
     @Value("${spring.mail.username}")
