@@ -14,6 +14,6 @@ You must have Docker and  Docker-compose installed and configured
 
 <li> Being in the directory where the <code>src</code> folder is downloaded from GitHub, run the command:
 
-<code>docker-compose up --build</code>. 
+<code>docker-compose up</code>. 
 The result of this command should be the start of packaging the application into a Docker container.
 </ul>
